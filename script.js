@@ -103,3 +103,39 @@ document.getElementById("posts").innerHTML=html;
 });
 
 }
+async function uploadPost(){
+
+var text=document.getElementById("textPost").value;
+var file=document.getElementById("imageUpload").files[0];
+
+var postId=Date.now();
+
+var imageURL="";
+
+if(file){
+
+let formData=new FormData();
+formData.append("image",file);
+
+let res=await fetch("https://api.imgbb.com/1/upload?key=8da594cfe17b37f3cbef03114439f7f5",{
+method:"POST",
+body:formData
+});
+
+let data=await res.json();
+
+imageURL=data.data.url;
+
+}
+
+database.ref("posts/"+postId).set({
+
+username:username,
+text:text,
+image:imageURL,
+date:new Date().toLocaleString(),
+likes:0
+
+});
+
+}
