@@ -1,13 +1,16 @@
 <!DOCTYPE html>
 <html>
 <head>
+
 <title>JustTypeWeb</title>
+
+<meta name="viewport" content="width=device-width, initial-scale=1">
 
 <link rel="stylesheet" href="style.css">
 
-<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
 
 </head>
 
@@ -17,9 +20,21 @@
 
 <h1 class="logo">JustTypeWeb</h1>
 
-<button id="login">Login with Google</button>
+<button id="loginBtn">Login with Google</button>
 
 </header>
+
+<div class="container">
+
+<div id="usernameBox" class="username-box" style="display:none">
+
+<h3>Create Username</h3>
+
+<input id="usernameInput" placeholder="Unique username">
+
+<button id="saveUsername">Save</button>
+
+</div>
 
 
 <div class="post-box">
@@ -40,7 +55,12 @@
 
 <h3>Support Developer ❤️</h3>
 
-<button id="donate">Donate</button>
+<script src="https://checkout.razorpay.com/v1/payment-button.js"
+data-payment_button_id="YOUR_RAZORPAY_BUTTON_ID"
+async>
+</script>
+
+</div>
 
 </div>
 
