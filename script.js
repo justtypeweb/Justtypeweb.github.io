@@ -1,9 +1,9 @@
 var firebaseConfig = {
-apiKey: "YOURKEY",
-authDomain: "YOURDOMAIN",
-databaseURL: "YOURDATABASEURL",
-projectId: "YOURPROJECTID",
-storageBucket: "YOURBUCKET"
+apiKey: "AIzaSyDHixIgWj0F9OnwwK8G425FrPS4VsdNaCg",
+authDomain: "justtypeweb-9662c.firebaseapp.com",
+databaseURL: "https://justtypeweb-9662c-default-rtdb.firebaseio.com",
+projectId: "justtypeweb-9662c",
+storageBucket: "usttypeweb-9662c.firebasestorage.app"
 };
 
 firebase.initializeApp(firebaseConfig);
