@@ -1,1 +1,43 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>JustTypeWeb</title>
+<link rel="stylesheet" href="style.css">
 
+<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-storage.js"></script>
+
+</head>
+
+<body>
+
+<h1 class="logo">JustTypeWeb</h1>
+
+<div id="usernameBox">
+<input type="text" id="username" placeholder="Enter your username">
+<button onclick="start()">Start</button>
+</div>
+
+<div id="postSection" style="display:none">
+
+<textarea id="textPost" placeholder="Write something..."></textarea>
+
+<input type="file" id="imageUpload">
+
+<button onclick="uploadPost()">Post</button>
+
+</div>
+
+<h2>Posts</h2>
+
+<div id="posts"></div>
+
+<br>
+
+<a href="donate.html">Donate to Developer</a>
+
+<script src="script.js"></script>
+
+</body>
+</html>
