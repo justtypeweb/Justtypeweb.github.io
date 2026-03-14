@@ -1,78 +1,59 @@
-const firebaseConfig = {
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+import { getFirestore, collection, addDoc, getDocs } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
+const firebaseConfig = {
 apiKey: "AIzaSyDHixIgWj0F9OnwwK8G425FrPS4VsdNaCg",
 authDomain: "justtypeweb-9662c.firebaseapp.com",
 projectId: "justtypeweb-9662c",
-
+storageBucket: "justtypeweb-9662c.firebasestorage.app",
+messagingSenderId: "157242433767",
+appId: "1:157242433767:web:cd75b184b5b5ebc25c8242"
 };
 
-firebase.initializeApp(firebaseConfig);
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
 
-const db = firebase.firestore();
+async function uploadPost(){
 
-let username="";
+const username = document.getElementById("username").value;
+const text = document.getElementById("postText").value;
 
-function saveUser(){
-
-username=document.getElementById("username").value;
-
-if(username==""){
-
-alert("Enter username");
+if(username=="" || text==""){
+alert("Enter username and text");
 return;
-
 }
 
-document.querySelector(".usernameBox").style.display="none";
-
-document.getElementById("postSection").style.display="block";
-
-}
-
-function postMessage(){
-
-let text=document.getElementById("postText").value;
-
-if(text=="") return;
-
-db.collection("posts").add({
-
+await addDoc(collection(db,"posts"),{
 username:username,
 text:text,
-date:new Date()
-
+date:new Date().toLocaleString()
 });
 
-document.getElementById("postText").value="";
+location.reload();
 
 }
 
-db.collection("posts")
-.orderBy("date","desc")
-.onSnapshot((snapshot)=>{
+async function loadPosts(){
 
-let postsDiv=document.getElementById("posts");
+const querySnapshot = await getDocs(collection(db,"posts"));
 
-postsDiv.innerHTML="";
+querySnapshot.forEach((doc)=>{
 
-snapshot.forEach((doc)=>{
+const post = doc.data();
 
-let data=doc.data();
+const div = document.createElement("div");
+div.className="post";
 
-postsDiv.innerHTML+=`
-
-<div class="post">
-
-<div class="username">${data.username}</div>
-
-<div>${data.text}</div>
-
-<div class="date">${new Date(data.date.seconds*1000).toLocaleString()}</div>
-
-</div>
-
+div.innerHTML = `
+<b>${post.username}</b><br>
+${post.text}<br>
+<small>${post.date}</small>
 `;
 
-});
+document.getElementById("posts").appendChild(div);
 
 });
+
+}
+
+loadPosts();
