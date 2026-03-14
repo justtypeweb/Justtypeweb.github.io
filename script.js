@@ -1,141 +1,78 @@
-var firebaseConfig = {
+const firebaseConfig = {
+
 apiKey: "AIzaSyDHixIgWj0F9OnwwK8G425FrPS4VsdNaCg",
 authDomain: "justtypeweb-9662c.firebaseapp.com",
-databaseURL: "https://justtypeweb-9662c-default-rtdb.firebaseio.com",
 projectId: "justtypeweb-9662c",
-storageBucket: "usttypeweb-9662c.firebasestorage.app"
+
 };
 
 firebase.initializeApp(firebaseConfig);
 
-var database = firebase.database();
-var storage = firebase.storage();
+const db = firebase.firestore();
 
-var username="";
+let username="";
 
-function start(){
+function saveUser(){
 
 username=document.getElementById("username").value;
 
 if(username==""){
+
 alert("Enter username");
 return;
+
 }
 
-document.getElementById("usernameBox").style.display="none";
+document.querySelector(".usernameBox").style.display="none";
+
 document.getElementById("postSection").style.display="block";
 
-loadPosts();
-
 }
 
-function uploadPost(){
+function postMessage(){
 
-var text=document.getElementById("textPost").value;
+let text=document.getElementById("postText").value;
 
-var file=document.getElementById("imageUpload").files[0];
+if(text=="") return;
 
-var date=new Date().toISOString();
-
-if(file){
-
-var storageRef=storage.ref("images/"+file.name);
-
-storageRef.put(file).then(function(snapshot){
-
-snapshot.ref.getDownloadURL().then(function(url){
-
-savePost(text,url,date);
-
-});
-
-});
-
-}else{
-
-savePost(text,"",date);
-
-}
-
-}
-
-function savePost(text,image,date){
-
-database.ref("posts/"+date).set({
+db.collection("posts").add({
 
 username:username,
 text:text,
-image:image,
-date:date
+date:new Date()
 
 });
 
+document.getElementById("postText").value="";
+
 }
 
-function loadPosts(){
+db.collection("posts")
+.orderBy("date","desc")
+.onSnapshot((snapshot)=>{
 
-database.ref("posts").on("value",function(snapshot){
+let postsDiv=document.getElementById("posts");
 
-var posts=snapshot.val();
+postsDiv.innerHTML="";
 
-var html="";
+snapshot.forEach((doc)=>{
 
-for(var key in posts){
+let data=doc.data();
 
-var p=posts[key];
+postsDiv.innerHTML+=`
 
-html+=`
 <div class="post">
 
-<h3>${p.username}</h3>
-<p>${p.text}</p>
-<img src="${p.image}" width="200">
-<br>
-<small>${p.date}</small>
+<div class="username">${data.username}</div>
+
+<div>${data.text}</div>
+
+<div class="date">${new Date(data.date.seconds*1000).toLocaleString()}</div>
 
 </div>
+
 `;
 
-}
-
-document.getElementById("posts").innerHTML=html;
-
 });
 
-}
-async function uploadPost(){
-
-var text=document.getElementById("textPost").value;
-var file=document.getElementById("imageUpload").files[0];
-
-var postId=Date.now();
-
-var imageURL="";
-
-if(file){
-
-let formData=new FormData();
-formData.append("image",file);
-
-let res=await fetch("https://api.imgbb.com/1/upload?key=8da594cfe17b37f3cbef03114439f7f5",{
-method:"POST",
-body:formData
 });
-
-let data=await res.json();
-
-imageURL=data.data.url;
-
-}
-
-database.ref("posts/"+postId).set({
-
-username:username,
-text:text,
-image:imageURL,
-date:new Date().toLocaleString(),
-likes:0
-
-});
-
-}
