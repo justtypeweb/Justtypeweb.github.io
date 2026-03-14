@@ -2,11 +2,12 @@
 <html>
 <head>
 <title>JustTypeWeb</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
 <link rel="stylesheet" href="style.css">
 
-<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
-<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
-<script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-storage.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js"></script>
 
 </head>
 
@@ -14,28 +15,33 @@
 
 <h1 class="logo">JustTypeWeb</h1>
 
-<div id="usernameBox">
-<input type="text" id="username" placeholder="Enter your username">
-<button onclick="start()">Start</button>
+<div class="usernameBox">
+<input id="username" placeholder="Enter username">
+<button onclick="saveUser()">Start</button>
 </div>
 
 <div id="postSection" style="display:none">
 
-<textarea id="textPost" placeholder="Write something..."></textarea>
+<textarea id="postText" placeholder="Type something..."></textarea>
 
-<input type="file" id="imageUpload">
-
-<button onclick="uploadPost()">Post</button>
+<button onclick="postMessage()">Post</button>
 
 </div>
 
-<h2>Posts</h2>
+<h2>Latest Posts</h2>
 
 <div id="posts"></div>
 
-<br>
+<div class="donate">
+<h3>Support Developer</h3>
 
-<a href="donate.html">Donate to Developer</a>
+<form>
+<script src="https://checkout.razorpay.com/v1/payment-button.js"
+data-payment_button_id="rzp_live_SRA29FyRhArgmI">
+</script>
+</form>
+
+</div>
 
 <script src="script.js"></script>
 
