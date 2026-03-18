@@ -1,29 +1,84 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>Seek Streaming Player</title>
-</head>
-<body style="background:black; color:white; text-align:center;">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>StreamHub</title>
 
-<h2>🎬 My Streaming Website</h2>
-
-<video id="player" controls width="90%"></video>
-
-<script>
-const API_KEY = "8c649b4dea9ca0bdcbe60cbf";
-
-fetch("https://api.seekstreaming.com/videos", {
-    headers: {
-        "Authorization": "Bearer " + API_KEY
+<style>
+    body {
+        margin: 0;
+        font-family: Arial, sans-serif;
+        background: #0d0d0d;
+        color: white;
     }
-})
-.then(res => res.json())
-.then(data => {
-    // Example: first video
-    const videoUrl = data.videos[0].url;
-    document.getElementById("player").src = videoUrl;
-});
-</script>
+
+    header {
+        background: #111;
+        padding: 15px;
+        text-align: center;
+        font-size: 20px;
+        font-weight: bold;
+        color: red;
+    }
+
+    .container {
+        max-width: 1000px;
+        margin: auto;
+        padding: 10px;
+    }
+
+    /* Responsive video */
+    .video-wrapper {
+        position: relative;
+        padding-top: 56.25%; /* 16:9 ratio */
+        width: 100%;
+        background: black;
+        border-radius: 10px;
+        overflow: hidden;
+    }
+
+    video {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+    }
+
+    .title {
+        margin-top: 15px;
+        font-size: 18px;
+    }
+
+    /* Mobile optimization */
+    @media (max-width: 600px) {
+        header {
+            font-size: 16px;
+        }
+
+        .title {
+            font-size: 16px;
+        }
+    }
+</style>
+</head>
+
+<body>
+
+<header>🔥 StreamHub</header>
+
+<div class="container">
+
+    <div class="video-wrapper">
+        <video controls>
+            <source src="https://www.w3schools.com/html/mov_bbb.mp4" type="video/mp4">
+        </video>
+    </div>
+
+    <div class="title">Sample Streaming Video</div>
+
+</div>
 
 </body>
 </html>
