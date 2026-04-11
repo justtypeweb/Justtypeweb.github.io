@@ -7,61 +7,56 @@
   <script src="https://cdn.tailwindcss.com"></script>
 </head>
 
-<body class="bg-black text-white">
+<body class="bg-[#121212] text-[#E0E0E0]">
 
 <div class="flex max-w-6xl mx-auto">
 
   <!-- Sidebar -->
-  <div class="hidden md:block w-1/4 p-4 border-r border-gray-800">
-    <h1 class="text-2xl font-bold mb-6">JustTypeWeb</h1>
+  <div class="hidden md:block w-1/4 p-4 border-r border-[#444444]">
+    <h1 class="text-2xl font-bold mb-6 text-[#E0E0E0]">JustTypeWeb</h1>
 
-    <div class="space-y-4 text-lg">
-      <div class="hover:text-blue-400 cursor-pointer">🏠 Home</div>
-      <div class="hover:text-blue-400 cursor-pointer">🔔 Notifications</div>
-      <div class="hover:text-blue-400 cursor-pointer">🔍 Explore</div>
+    <div class="space-y-4 text-lg text-[#B0B0B0]">
+      <div onclick="showHome()" class="cursor-pointer hover:text-white">🏠 Home</div>
+      <div onclick="showNotifications()" class="cursor-pointer hover:text-white">🔔 Notifications</div>
+      <div onclick="showExplore()" class="cursor-pointer hover:text-white">🔍 Explore</div>
     </div>
   </div>
 
-  <!-- Main Feed -->
-  <div class="w-full md:w-2/4 border-r border-gray-800">
+  <!-- Main -->
+  <div class="w-full md:w-2/4 p-4">
 
-    <div class="p-4 border-b border-gray-800 sticky top-0 bg-black z-10">
-      <h2 class="text-xl font-bold">Home</h2>
-    </div>
+    <!-- HOME -->
+    <div id="homeSection">
 
-    <!-- Post Box -->
-    <div class="p-4 border-b border-gray-800">
       <input id="username" placeholder="Username"
-        class="w-full p-2 mb-2 text-black rounded">
+        class="w-full p-2 mb-2 bg-[#1e1e1e] text-white border border-[#444444] rounded">
 
       <textarea id="postInput" placeholder="What's happening?"
-        class="w-full p-2 text-black rounded"></textarea>
+        class="w-full p-2 bg-[#1e1e1e] text-white border border-[#444444] rounded"></textarea>
 
       <button onclick="addPost()"
-        class="bg-blue-500 px-4 py-2 mt-2 rounded w-full">
+        class="bg-[#444444] hover:bg-[#888888] px-4 py-2 mt-2 rounded w-full">
         Post
       </button>
-    </div>
 
-    <!-- Search -->
-    <div class="p-4 border-b border-gray-800">
       <input id="searchInput"
         placeholder="Search..."
-        class="w-full p-2 text-black rounded">
+        class="w-full p-2 mt-4 bg-[#1e1e1e] text-white border border-[#444444] rounded">
+
+      <div id="posts" class="mt-4"></div>
+
     </div>
 
-    <!-- Posts -->
-    <div id="posts"></div>
+    <!-- NOTIFICATIONS -->
+    <div id="notificationSection" class="hidden">
+      <h2 class="text-xl font-bold mb-2">Notifications 🔔</h2>
+      <div id="notifications"></div>
+    </div>
 
-  </div>
-
-  <!-- Right Panel -->
-  <div class="hidden md:block w-1/4 p-4">
-
-    <!-- Notifications -->
-    <div class="bg-gray-900 p-3 rounded mb-4">
-      <h2 class="font-bold mb-2">Notifications 🔔</h2>
-      <div id="notifications" class="text-sm space-y-2"></div>
+    <!-- EXPLORE -->
+    <div id="exploreSection" class="hidden">
+      <h2 class="text-xl font-bold mb-2">Explore 🔍</h2>
+      <div id="explorePosts"></div>
     </div>
 
   </div>
