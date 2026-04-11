@@ -10,10 +10,10 @@ import {
   serverTimestamp,
   doc,
   updateDoc,
-  increment
+  increment,
+  deleteDoc
 } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
-// Firebase config
 const firebaseConfig = {
   apiKey: "AIzaSyDKwUAMfUYFyX3jDFG4-XC-np80Og6Ebko",
   authDomain: "justtypeweb-9bfe5.firebaseapp.com",
@@ -24,6 +24,7 @@ const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
 let allPosts = [];
+let replyTarget = null;
 
 const postsDiv = document.getElementById("posts");
 const notifDiv = document.getElementById("notifications");
@@ -42,11 +43,10 @@ window.likePost = async function (id, owner) {
   await updateDoc(doc(db, "posts", id), {
     likes: increment(1)
   });
-
   sendNotification(owner, "❤️ Someone liked your post");
 };
 
-// 💬 Comment
+// 💬 Add Comment
 window.addComment = async function (postId, owner) {
   const input = document.getElementById(`comment-${postId}`);
   if (!input) return;
@@ -56,14 +56,28 @@ window.addComment = async function (postId, owner) {
 
   await addDoc(collection(db, "posts", postId, "comments"), {
     text,
-    time: serverTimestamp()
+    time: serverTimestamp(),
+    parentId: replyTarget
   });
 
+  replyTarget = null;
   input.value = "";
+
   sendNotification(owner, "💬 Someone commented");
 };
 
-// 💬 Load Comments
+// 🗑 Delete Comment
+window.deleteComment = async function (postId, commentId) {
+  await deleteDoc(doc(db, "posts", postId, "comments", commentId));
+};
+
+// ↩ Reply
+window.replyTo = function (postId, commentId) {
+  replyTarget = commentId;
+  document.getElementById(`comment-${postId}`).focus();
+};
+
+// 📡 Load Comments
 function loadComments(postId) {
   const commentsDiv = document.getElementById(`comments-${postId}`);
   if (!commentsDiv) return;
@@ -76,15 +90,49 @@ function loadComments(postId) {
   onSnapshot(q, (snapshot) => {
     commentsDiv.innerHTML = "";
 
-    snapshot.forEach((docItem) => {
-      const data = docItem.data();
+    const comments = [];
 
-      commentsDiv.innerHTML += `
-        <div class="ml-4 text-gray-400 text-sm">
-          💬 ${data.text}
-        </div>
-      `;
+    snapshot.forEach((docItem) => {
+      comments.push({
+        id: docItem.id,
+        ...docItem.data()
+      });
     });
+
+    comments.forEach((c) => {
+      if (!c.parentId) {
+        renderComment(postId, c, commentsDiv, comments, 0);
+      }
+    });
+  });
+}
+
+// 🎯 Render Comment
+function renderComment(postId, comment, parentDiv, allComments, level) {
+  const div = document.createElement("div");
+
+  div.innerHTML = `
+    <div class="bg-white text-black p-2 rounded-lg shadow mt-2"
+         style="margin-left:${level * 20}px">
+
+      💬 ${comment.text}
+
+      <div class="text-xs mt-1 flex gap-2">
+        <span onclick="replyTo('${postId}','${comment.id}')"
+              class="text-blue-500 cursor-pointer">Reply</span>
+
+        <span onclick="deleteComment('${postId}','${comment.id}')"
+              class="text-red-500 cursor-pointer">Delete</span>
+      </div>
+    </div>
+  `;
+
+  parentDiv.appendChild(div);
+
+  allComments.forEach((c) => {
+    if (c.parentId === comment.id) {
+      renderComment(postId, c, parentDiv, allComments, level + 1);
+    }
   });
 }
 
@@ -135,11 +183,11 @@ function renderPosts(posts) {
       <div class="border-b border-gray-700 p-4">
 
         <b class="text-blue-400">@${data.username}</b>
-        <p class="text-white">${data.text}</p>
+        <p>${data.text}</p>
 
         <div class="mt-2">
           <span onclick="likePost('${data.id}','${data.username}')"
-                class="cursor-pointer text-red-400 hover:text-red-500">
+                class="text-red-400 cursor-pointer">
             ❤️ ${data.likes || 0}
           </span>
         </div>
@@ -153,6 +201,7 @@ function renderPosts(posts) {
         </button>
 
         <div id="comments-${data.id}"></div>
+
       </div>
     `;
 
@@ -183,11 +232,7 @@ function loadNotifications(username) {
       const data = docItem.data();
 
       if (data.toUser === username) {
-        notifDiv.innerHTML += `
-          <div class="bg-gray-900 p-2 rounded border border-gray-700 mb-2">
-            ${data.message}
-          </div>
-        `;
+        notifDiv.innerHTML += `<div>${data.message}</div>`;
       }
     });
   });
