@@ -1,10 +1,20 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
 
 import {
-  getFirestore, collection, addDoc, onSnapshot, query, orderBy,
-  serverTimestamp, doc, updateDoc, increment, deleteDoc
+  getFirestore,
+  collection,
+  addDoc,
+  onSnapshot,
+  query,
+  orderBy,
+  serverTimestamp,
+  doc,
+  updateDoc,
+  increment,
+  deleteDoc
 } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
+// 🔥 FIREBASE CONFIG
 const firebaseConfig = {
   apiKey: "AIzaSyDKwUAMfUYFyX3jDFG4-XC-np80Og6Ebko",
   authDomain: "justtypeweb-9bfe5.firebaseapp.com",
@@ -14,67 +24,92 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
+// 📌 VARIABLES
 let allPosts = [];
 let replyTarget = null;
 
 const postsDiv = document.getElementById("posts");
 const notifDiv = document.getElementById("notifications");
 
-// 🚀 ADD POST
+const homeSection = document.getElementById("homeSection");
+const notificationSection = document.getElementById("notificationSection");
+const exploreSection = document.getElementById("exploreSection");
+const aboutSection = document.getElementById("aboutSection");
+
+// 🚀 ADD POST (FIXED)
 window.addPost = async () => {
-  const username = document.getElementById("username").value;
-  const text = document.getElementById("postInput").value;
+  const username = document.getElementById("username").value.trim();
+  const text = document.getElementById("postInput").value.trim();
 
   if (!username || !text) {
     alert("Enter username and post!");
     return;
   }
 
-  localStorage.setItem("username", username);
+  try {
+    await addDoc(collection(db, "posts"), {
+      username,
+      text,
+      time: serverTimestamp(),
+      likes: 0
+    });
 
-  await addDoc(collection(db, "posts"), {
-    username,
-    text,
-    time: serverTimestamp(),
-    likes: 0
-  });
+    document.getElementById("postInput").value = "";
+    console.log("✅ Post added");
 
-  document.getElementById("postInput").value = "";
+  } catch (error) {
+    console.error("❌ Error:", error);
+    alert("Posting failed! Check Firebase rules.");
+  }
 };
 
 // ❤️ LIKE
 window.likePost = async (id) => {
-  await updateDoc(doc(db, "posts", id), {
-    likes: increment(1)
-  });
+  try {
+    await updateDoc(doc(db, "posts", id), {
+      likes: increment(1)
+    });
+  } catch (error) {
+    console.error(error);
+  }
 };
 
 // 💬 COMMENT
 window.addComment = async (postId) => {
   const input = document.getElementById(`comment-${postId}`);
-  const text = input.value;
+  if (!input) return;
 
+  const text = input.value.trim();
   if (!text) return;
 
-  await addDoc(collection(db, "posts", postId, "comments"), {
-    text,
-    time: serverTimestamp(),
-    parentId: replyTarget
-  });
+  try {
+    await addDoc(collection(db, "posts", postId, "comments"), {
+      text,
+      time: serverTimestamp(),
+      parentId: replyTarget
+    });
 
-  replyTarget = null;
-  input.value = "";
+    replyTarget = null;
+    input.value = "";
+  } catch (error) {
+    console.error(error);
+  }
 };
 
 // 🗑 DELETE COMMENT
 window.deleteComment = async (postId, id) => {
-  await deleteDoc(doc(db, "posts", postId, "comments", id));
+  try {
+    await deleteDoc(doc(db, "posts", postId, "comments", id));
+  } catch (error) {
+    console.error(error);
+  }
 };
 
 // ↩ REPLY
 window.replyTo = (postId, id) => {
   replyTarget = id;
-  document.getElementById(`comment-${postId}`).focus();
+  const input = document.getElementById(`comment-${postId}`);
+  if (input) input.focus();
 };
 
 // 📡 LOAD POSTS
@@ -95,6 +130,8 @@ onSnapshot(q, (snapshot) => {
 
 // 🎯 RENDER POSTS
 function renderPosts(posts) {
+  if (!postsDiv) return;
+
   postsDiv.innerHTML = "";
 
   posts.forEach((p) => {
@@ -122,30 +159,49 @@ function renderPosts(posts) {
   });
 }
 
-// 🔍 SEARCH
-document.getElementById("searchInput").addEventListener("input", (e) => {
-  const value = e.target.value.toLowerCase();
+// 🔍 SEARCH (SAFE)
+const searchBox = document.getElementById("searchInput");
 
-  const filtered = allPosts.filter((p) =>
-    p.username.toLowerCase().includes(value) ||
-    p.text.toLowerCase().includes(value)
-  );
+if (searchBox) {
+  searchBox.addEventListener("input", (e) => {
+    const value = e.target.value.toLowerCase();
 
-  renderPosts(filtered);
-});
+    const filtered = allPosts.filter((p) =>
+      p.username.toLowerCase().includes(value) ||
+      p.text.toLowerCase().includes(value)
+    );
+
+    renderPosts(filtered);
+  });
+}
 
 // 🧭 NAVIGATION
 function hideAll() {
-  homeSection.classList.add("hidden");
-  notificationSection.classList.add("hidden");
-  exploreSection.classList.add("hidden");
-  aboutSection.classList.add("hidden");
+  homeSection?.classList.add("hidden");
+  notificationSection?.classList.add("hidden");
+  exploreSection?.classList.add("hidden");
+  aboutSection?.classList.add("hidden");
 }
 
-window.showHome = () => { hideAll(); homeSection.classList.remove("hidden"); };
-window.showNotifications = () => { hideAll(); notificationSection.classList.remove("hidden"); };
-window.showExplore = () => { hideAll(); exploreSection.classList.remove("hidden"); };
-window.showAbout = () => { hideAll(); aboutSection.classList.remove("hidden"); };
+window.showHome = () => {
+  hideAll();
+  homeSection?.classList.remove("hidden");
+};
+
+window.showNotifications = () => {
+  hideAll();
+  notificationSection?.classList.remove("hidden");
+};
+
+window.showExplore = () => {
+  hideAll();
+  exploreSection?.classList.remove("hidden");
+};
+
+window.showAbout = () => {
+  hideAll();
+  aboutSection?.classList.remove("hidden");
+};
 
 // 👤 LOAD USER
 window.onload = () => {
