@@ -54,11 +54,34 @@ onSnapshot(q, (snapshot) => {
   snapshot.forEach((doc) => {
     const data = doc.data();
 
+    const firstLetter = data.username.charAt(0).toUpperCase();
+
     postsDiv.innerHTML += `
-      <div class="bg-gray-900 p-4 rounded">
-        <b>@${data.username}</b>
-        <p>${data.text}</p>
-        <small>${data.time ? data.time.toDate().toLocaleString() : ""}</small>
+      <div class="bg-gray-900 p-4 rounded-lg flex gap-3 shadow-md">
+
+        <!-- Avatar -->
+        <div class="bg-blue-500 w-10 h-10 flex items-center justify-center rounded-full font-bold">
+          ${firstLetter}
+        </div>
+
+        <!-- Content -->
+        <div class="flex-1">
+          <div class="flex justify-between items-center">
+            <b>@${data.username}</b>
+            <small class="text-gray-400">
+              ${data.time ? data.time.toDate().toLocaleString() : ""}
+            </small>
+          </div>
+
+          <p class="mt-1">${data.text}</p>
+
+          <!-- Actions -->
+          <div class="flex gap-4 mt-2 text-gray-400 text-sm">
+            <span>❤️ 0</span>
+            <span>💬 Reply</span>
+          </div>
+        </div>
+
       </div>
     `;
   });
