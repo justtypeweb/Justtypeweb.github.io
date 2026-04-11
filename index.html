@@ -7,7 +7,7 @@
 
   <script src="https://cdn.tailwindcss.com"></script>
 
-  <!-- ✅ Google AdSense -->
+  <!-- Google AdSense -->
   <script async 
     src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9966062812451377"
     crossorigin="anonymous"></script>
@@ -22,7 +22,7 @@
 
 <div class="flex max-w-6xl mx-auto mt-14 md:mt-0">
 
-  <!-- Sidebar -->
+  <!-- Sidebar (Desktop) -->
   <div class="hidden md:block w-1/4 p-4 border-r border-gray-700">
     <h1 class="text-2xl font-bold mb-6 text-blue-400">JustTypeWeb</h1>
 
@@ -35,7 +35,7 @@
   </div>
 
   <!-- Main -->
-  <div class="w-full md:w-2/4 p-4 pb-24">
+  <div class="w-full md:w-2/4 p-4 pb-32">
 
     <!-- 🔝 TOP AD -->
     <div class="my-4 text-center">
@@ -89,18 +89,34 @@
     </div>
 
   </div>
+</div>
+
+<!-- 📱 MOBILE NAV (FIXED PERFECTLY) -->
+<div class="fixed bottom-0 left-0 w-full bg-black border-t border-gray-800 flex justify-around items-center py-3 md:hidden z-50 shadow-lg">
+
+  <button onclick="showHome()" class="flex flex-col items-center text-gray-400 hover:text-blue-400">
+    🏠
+    <span class="text-xs">Home</span>
+  </button>
+
+  <button onclick="showNotifications()" class="flex flex-col items-center text-gray-400 hover:text-blue-400">
+    🔔
+    <span class="text-xs">Alerts</span>
+  </button>
+
+  <button onclick="showExplore()" class="flex flex-col items-center text-gray-400 hover:text-blue-400">
+    🔍
+    <span class="text-xs">Explore</span>
+  </button>
+
+  <button onclick="showAbout()" class="flex flex-col items-center text-gray-400 hover:text-blue-400">
+    📄
+    <span class="text-xs">About</span>
+  </button>
 
 </div>
 
-<!-- 📱 MOBILE NAV -->
-<div class="fixed bottom-0 left-0 w-full bg-black border-t border-gray-700 flex justify-around p-3 md:hidden text-lg">
-  <div onclick="showHome()">🏠</div>
-  <div onclick="showNotifications()">🔔</div>
-  <div onclick="showExplore()">🔍</div>
-  <div onclick="showAbout()">📄</div>
-</div>
-
-<!-- ✅ ACTIVATE ADS -->
+<!-- Activate Ads -->
 <script>
   (adsbygoogle = window.adsbygoogle || []).push({});
 </script>
