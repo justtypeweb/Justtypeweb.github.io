@@ -99,4 +99,9 @@ window.onload = () => {
   }
 
   document.getElementById("postInput").focus();
+  if (savedUsername) {
+  const userField = document.getElementById("username");
+  userField.value = savedUsername;
+  userField.disabled = true;
+}
 };
