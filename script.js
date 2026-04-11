@@ -14,6 +14,7 @@ import {
   deleteDoc
 } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
+// 🔥 FIREBASE CONFIG
 const firebaseConfig = {
   apiKey: "AIzaSyDKwUAMfUYFyX3jDFG4-XC-np80Og6Ebko",
   authDomain: "justtypeweb-9bfe5.firebaseapp.com",
@@ -23,6 +24,17 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
+// 🔐 HTML ESCAPE FUNCTION (IMPORTANT)
+function escapeHTML(str) {
+  return str
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#039;");
+}
+
+// 📌 VARIABLES
 let allPosts = [];
 let replyTarget = null;
 
@@ -38,20 +50,24 @@ async function sendNotification(toUser, message) {
   });
 }
 
-// ❤️ Like
+// ❤️ LIKE
 window.likePost = async function (id, owner) {
-  await updateDoc(doc(db, "posts", id), {
-    likes: increment(1)
-  });
-  sendNotification(owner, "❤️ Someone liked your post");
+  try {
+    await updateDoc(doc(db, "posts", id), {
+      likes: increment(1)
+    });
+    sendNotification(owner, "❤️ Someone liked your post");
+  } catch (e) {
+    console.error(e);
+  }
 };
 
-// 💬 Comment
+// 💬 COMMENT
 window.addComment = async function (postId, owner) {
   const input = document.getElementById(`comment-${postId}`);
   if (!input) return;
 
-  const text = input.value;
+  const text = input.value.trim();
   if (!text) return;
 
   await addDoc(collection(db, "posts", postId, "comments"), {
@@ -64,20 +80,21 @@ window.addComment = async function (postId, owner) {
   input.value = "";
 };
 
-// 🗑 Delete
+// 🗑 DELETE
 window.deleteComment = async function (postId, commentId) {
   await deleteDoc(doc(db, "posts", postId, "comments", commentId));
 };
 
-// ↩ Reply
+// ↩ REPLY
 window.replyTo = function (postId, commentId) {
   replyTarget = commentId;
   document.getElementById(`comment-${postId}`).focus();
 };
 
-// 📡 Load Comments
+// 📡 LOAD COMMENTS
 function loadComments(postId) {
   const div = document.getElementById(`comments-${postId}`);
+  if (!div) return;
 
   const q = query(
     collection(db, "posts", postId, "comments"),
@@ -100,6 +117,7 @@ function loadComments(postId) {
   });
 }
 
+// 🎯 RENDER COMMENT (SECURE)
 function renderComment(postId, c, parent, all, level) {
   const el = document.createElement("div");
 
@@ -107,7 +125,7 @@ function renderComment(postId, c, parent, all, level) {
     <div class="bg-white text-black p-2 rounded mt-2"
          style="margin-left:${level * 20}px">
 
-      💬 ${c.text}
+      💬 ${escapeHTML(c.text)}
 
       <div class="text-xs mt-1">
         <span onclick="replyTo('${postId}','${c.id}')" class="text-blue-500 cursor-pointer">Reply</span>
@@ -125,38 +143,49 @@ function renderComment(postId, c, parent, all, level) {
   });
 }
 
-// 🚀 Add Post
+// 🚀 ADD POST (SECURE)
 window.addPost = async function () {
-  const username = document.getElementById("username").value;
-  const text = document.getElementById("postInput").value;
+  const username = document.getElementById("username").value.trim();
+  const text = document.getElementById("postInput").value.trim();
 
-  if (!username || !text) return alert("Enter all");
+  if (!username || !text) {
+    alert("Enter username and post!");
+    return;
+  }
 
-  localStorage.setItem("username", username);
+  try {
+    await addDoc(collection(db, "posts"), {
+      username,
+      text,
+      time: serverTimestamp(),
+      likes: 0
+    });
 
-  await addDoc(collection(db, "posts"), {
-    username,
-    text,
-    time: serverTimestamp(),
-    likes: 0
-  });
+    document.getElementById("postInput").value = "";
 
-  document.getElementById("postInput").value = "";
+  } catch (error) {
+    console.error(error);
+    alert("Error posting");
+  }
 };
 
-// 📡 Posts
+// 📡 LOAD POSTS
 const q = query(collection(db, "posts"), orderBy("time", "desc"));
 
 onSnapshot(q, (snapshot) => {
   allPosts = [];
 
   snapshot.forEach((docItem) => {
-    allPosts.push({ id: docItem.id, ...docItem.data() });
+    allPosts.push({
+      id: docItem.id,
+      ...docItem.data()
+    });
   });
 
   renderPosts(allPosts);
 });
 
+// 🎯 RENDER POSTS (SECURE)
 function renderPosts(posts) {
   postsDiv.innerHTML = "";
 
@@ -164,8 +193,8 @@ function renderPosts(posts) {
     postsDiv.innerHTML += `
       <div class="border-b border-gray-700 p-4">
 
-        <b class="text-blue-400">@${p.username}</b>
-        <p>${p.text}</p>
+        <b class="text-blue-400">@${escapeHTML(p.username)}</b>
+        <p>${escapeHTML(p.text)}</p>
 
         <span onclick="likePost('${p.id}','${p.username}')" class="text-red-400 cursor-pointer">
           ❤️ ${p.likes || 0}
@@ -187,14 +216,21 @@ function renderPosts(posts) {
   });
 }
 
-// 🔍 Search
-document.getElementById("searchInput").addEventListener("input", (e) => {
-  const v = e.target.value.toLowerCase();
-  renderPosts(allPosts.filter(p =>
-    p.username.toLowerCase().includes(v) ||
-    p.text.toLowerCase().includes(v)
-  ));
-});
+// 🔍 SEARCH
+const searchBox = document.getElementById("searchInput");
+
+if (searchBox) {
+  searchBox.addEventListener("input", (e) => {
+    const value = e.target.value.toLowerCase();
+
+    const filtered = allPosts.filter((p) =>
+      p.username.toLowerCase().includes(value) ||
+      p.text.toLowerCase().includes(value)
+    );
+
+    renderPosts(filtered);
+  });
+}
 
 // 🔔 Notifications
 function loadNotifications(username) {
@@ -206,48 +242,16 @@ function loadNotifications(username) {
     snapshot.forEach((d) => {
       const data = d.data();
       if (data.toUser === username) {
-        notifDiv.innerHTML += `<div>${data.message}</div>`;
+        notifDiv.innerHTML += `<div>${escapeHTML(data.message)}</div>`;
       }
     });
   });
 }
 
-// 🧭 Navigation
-function hideAll() {
-  homeSection.classList.add("hidden");
-  notificationSection.classList.add("hidden");
-  exploreSection.classList.add("hidden");
-  aboutSection.classList.add("hidden");
-  donateSection.classList.add("hidden");
-}
-
-window.showHome = () => { hideAll(); homeSection.classList.remove("hidden"); };
-window.showNotifications = () => { hideAll(); notificationSection.classList.remove("hidden"); };
-window.showExplore = () => { hideAll(); exploreSection.classList.remove("hidden"); renderExplore(); };
-window.showAbout = () => { hideAll(); aboutSection.classList.remove("hidden"); };
-window.showDonate = () => { hideAll(); donateSection.classList.remove("hidden"); };
-
-// 🔍 Explore
-function renderExplore() {
-  const div = document.getElementById("explorePosts");
-  div.innerHTML = "";
-
-  [...allPosts]
-    .sort((a,b)=>(b.likes||0)-(a.likes||0))
-    .forEach(p=>{
-      div.innerHTML += `
-        <div class="border-b border-gray-700 p-3">
-          <b class="text-blue-400">@${p.username}</b>
-          <p>${p.text}</p>
-          ❤️ ${p.likes || 0}
-        </div>
-      `;
-    });
-}
-
 // 👤 Load user
 window.onload = () => {
   const saved = localStorage.getItem("username");
+
   if (saved) {
     document.getElementById("username").value = saved;
     loadNotifications(saved);
