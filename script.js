@@ -28,7 +28,7 @@ const notifDiv = document.getElementById("notifications");
 
 let allPosts = [];
 
-// 🔔 Send Notification
+// 🔔 Notification
 async function sendNotification(toUser, message) {
   await addDoc(collection(db, "notifications"), {
     toUser,
@@ -39,9 +39,7 @@ async function sendNotification(toUser, message) {
 
 // ❤️ Like
 window.likePost = async function (id, owner) {
-  const postRef = doc(db, "posts", id);
-
-  await updateDoc(postRef, {
+  await updateDoc(doc(db, "posts", id), {
     likes: increment(1)
   });
 
@@ -61,7 +59,6 @@ window.addComment = async function (postId, owner) {
   });
 
   input.value = "";
-
   sendNotification(owner, "💬 Someone commented on your post");
 };
 
@@ -127,7 +124,7 @@ onSnapshot(q, (snapshot) => {
   renderPosts(allPosts);
 });
 
-// 🎯 Render Posts
+// 🎯 Render
 function renderPosts(posts) {
   postsDiv.innerHTML = "";
 
@@ -158,19 +155,14 @@ function renderPosts(posts) {
             <span onclick="likePost('${data.id}','${data.username}')" class="cursor-pointer hover:text-red-500">
               ❤️ ${data.likes || 0}
             </span>
-            <span>💬</span>
           </div>
 
-          <!-- Comment Input -->
+          <!-- Comments -->
           <div class="ml-12 mt-2">
-            <input 
-              id="comment-${data.id}"
-              placeholder="Write a comment..."
-              class="w-full p-2 text-black rounded text-sm"
-            />
+            <input id="comment-${data.id}" placeholder="Write comment..."
+              class="w-full p-2 text-black rounded text-sm">
 
-            <button 
-              onclick="addComment('${data.id}','${data.username}')"
+            <button onclick="addComment('${data.id}','${data.username}')"
               class="text-blue-400 text-sm mt-1">
               Reply
             </button>
@@ -198,12 +190,9 @@ document.getElementById("searchInput").addEventListener("input", (e) => {
   renderPosts(filtered);
 });
 
-// 🔔 Load Notifications
+// 🔔 Notifications
 function loadNotifications(username) {
-  const q = query(
-    collection(db, "notifications"),
-    orderBy("time", "desc")
-  );
+  const q = query(collection(db, "notifications"), orderBy("time", "desc"));
 
   onSnapshot(q, (snapshot) => {
     notifDiv.innerHTML = "";
@@ -222,14 +211,13 @@ function loadNotifications(username) {
   });
 }
 
-// 👤 Load User
+// 👤 Load user
 window.onload = () => {
   const savedUsername = localStorage.getItem("username");
 
   if (savedUsername) {
-    const userField = document.getElementById("username");
-    userField.value = savedUsername;
-    userField.disabled = true;
+    document.getElementById("username").value = savedUsername;
+    document.getElementById("username").disabled = true;
 
     loadNotifications(savedUsername);
   }
