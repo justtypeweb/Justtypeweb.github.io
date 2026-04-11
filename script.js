@@ -1,3 +1,4 @@
+import { doc, updateDoc, increment } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
 
 import {
@@ -29,7 +30,13 @@ const postsDiv = document.getElementById("posts");
 window.addPost = async function () {
   const usernameInput = document.getElementById("username");
 const username = usernameInput.value;
+window.likePost = async function (id) {
+  const postRef = doc(db, "posts", id);
 
+  await updateDoc(postRef, {
+    likes: increment(1)
+  });
+};
 // Save username
 localStorage.setItem("username", username);
   const text = document.getElementById("postInput").value;
@@ -40,12 +47,12 @@ if (!username || !text) {
 
   document.querySelector("button").innerText = "Posting...";
 
-  await addDoc(collection(db, "posts"), {
-    username,
-    text,
-    time: serverTimestamp()
-  });
-
+ await addDoc(collection(db, "posts"), {
+  username,
+  text,
+  time: serverTimestamp(),
+  likes: 0
+});
   document.getElementById("postInput").value = "";
   document.querySelector("button").innerText = "Post";
 };
@@ -77,7 +84,10 @@ onSnapshot(q, (snapshot) => {
           <p class="mt-1">${data.text}</p>
 
           <div class="flex gap-4 mt-2 text-gray-400 text-sm">
-            <span>❤️ 0</span>
+          <span onclick="likePost('${doc.id}')" 
+      class="hover:text-red-500 cursor-pointer">
+  ❤️ ${data.likes || 0}
+</span>
             <span>💬 Reply</span>
           </div>
         </div>
