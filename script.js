@@ -14,7 +14,7 @@ import {
   deleteDoc
 } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
-// 🔥 FIREBASE CONFIG
+// 🔥 Firebase Config
 const firebaseConfig = {
   apiKey: "AIzaSyDKwUAMfUYFyX3jDFG4-XC-np80Og6Ebko",
   authDomain: "justtypeweb-9bfe5.firebaseapp.com",
@@ -24,7 +24,7 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
-// 🔐 HTML ESCAPE FUNCTION (IMPORTANT)
+// 🔐 Escape HTML (SECURITY)
 function escapeHTML(str) {
   return str
     .replace(/&/g, "&amp;")
@@ -34,7 +34,22 @@ function escapeHTML(str) {
     .replace(/'/g, "&#039;");
 }
 
-// 📌 VARIABLES
+// 🎯 Smart formatting (TEXT vs CODE)
+function formatText(text) {
+  const safe = escapeHTML(text);
+
+  if (text.includes("<") && text.includes(">")) {
+    return `
+      <pre class="bg-gray-900 text-green-400 p-3 rounded whitespace-pre-wrap overflow-x-auto">
+${safe}
+      </pre>
+    `;
+  } else {
+    return `<p class="text-gray-200">${safe}</p>`;
+  }
+}
+
+// 📌 Variables
 let allPosts = [];
 let replyTarget = null;
 
@@ -50,20 +65,16 @@ async function sendNotification(toUser, message) {
   });
 }
 
-// ❤️ LIKE
+// ❤️ Like
 window.likePost = async function (id, owner) {
-  try {
-    await updateDoc(doc(db, "posts", id), {
-      likes: increment(1)
-    });
-    sendNotification(owner, "❤️ Someone liked your post");
-  } catch (e) {
-    console.error(e);
-  }
+  await updateDoc(doc(db, "posts", id), {
+    likes: increment(1)
+  });
+  sendNotification(owner, "❤️ Someone liked your post");
 };
 
-// 💬 COMMENT
-window.addComment = async function (postId, owner) {
+// 💬 Comment
+window.addComment = async function (postId) {
   const input = document.getElementById(`comment-${postId}`);
   if (!input) return;
 
@@ -80,21 +91,20 @@ window.addComment = async function (postId, owner) {
   input.value = "";
 };
 
-// 🗑 DELETE
+// 🗑 Delete
 window.deleteComment = async function (postId, commentId) {
   await deleteDoc(doc(db, "posts", postId, "comments", commentId));
 };
 
-// ↩ REPLY
+// ↩ Reply
 window.replyTo = function (postId, commentId) {
   replyTarget = commentId;
   document.getElementById(`comment-${postId}`).focus();
 };
 
-// 📡 LOAD COMMENTS
+// 📡 Load Comments
 function loadComments(postId) {
   const div = document.getElementById(`comments-${postId}`);
-  if (!div) return;
 
   const q = query(
     collection(db, "posts", postId, "comments"),
@@ -117,7 +127,7 @@ function loadComments(postId) {
   });
 }
 
-// 🎯 RENDER COMMENT (SECURE)
+// 🎯 Render Comment (SAFE)
 function renderComment(postId, c, parent, all, level) {
   const el = document.createElement("div");
 
@@ -125,11 +135,11 @@ function renderComment(postId, c, parent, all, level) {
     <div class="bg-white text-black p-2 rounded mt-2"
          style="margin-left:${level * 20}px">
 
-      💬 ${escapeHTML(c.text)}
+      ${formatText(c.text)}
 
       <div class="text-xs mt-1">
         <span onclick="replyTo('${postId}','${c.id}')" class="text-blue-500 cursor-pointer">Reply</span>
-        <span onclick="deleteComment('${postId}','${c.id}')" class="text-red-500 cursor-pointer ml-2">Delete</span>
+        <span onclick="deleteComment('${postId}','${c.id}')" class="text-red-500 ml-2 cursor-pointer">Delete</span>
       </div>
     </div>
   `;
@@ -143,49 +153,39 @@ function renderComment(postId, c, parent, all, level) {
   });
 }
 
-// 🚀 ADD POST (SECURE)
+// 🚀 Add Post
 window.addPost = async function () {
   const username = document.getElementById("username").value.trim();
   const text = document.getElementById("postInput").value.trim();
 
-  if (!username || !text) {
-    alert("Enter username and post!");
-    return;
-  }
+  if (!username || !text) return alert("Enter all");
 
-  try {
-    await addDoc(collection(db, "posts"), {
-      username,
-      text,
-      time: serverTimestamp(),
-      likes: 0
-    });
+  localStorage.setItem("username", username);
 
-    document.getElementById("postInput").value = "";
+  await addDoc(collection(db, "posts"), {
+    username,
+    text,
+    time: serverTimestamp(),
+    likes: 0
+  });
 
-  } catch (error) {
-    console.error(error);
-    alert("Error posting");
-  }
+  document.getElementById("postInput").value = "";
 };
 
-// 📡 LOAD POSTS
+// 📡 Posts
 const q = query(collection(db, "posts"), orderBy("time", "desc"));
 
 onSnapshot(q, (snapshot) => {
   allPosts = [];
 
   snapshot.forEach((docItem) => {
-    allPosts.push({
-      id: docItem.id,
-      ...docItem.data()
-    });
+    allPosts.push({ id: docItem.id, ...docItem.data() });
   });
 
   renderPosts(allPosts);
 });
 
-// 🎯 RENDER POSTS (SECURE)
+// 🎯 Render Posts (SAFE + CLEAN)
 function renderPosts(posts) {
   postsDiv.innerHTML = "";
 
@@ -194,7 +194,8 @@ function renderPosts(posts) {
       <div class="border-b border-gray-700 p-4">
 
         <b class="text-blue-400">@${escapeHTML(p.username)}</b>
-        <p>${escapeHTML(p.text)}</p>
+
+        ${formatText(p.text)}
 
         <span onclick="likePost('${p.id}','${p.username}')" class="text-red-400 cursor-pointer">
           ❤️ ${p.likes || 0}
@@ -203,7 +204,7 @@ function renderPosts(posts) {
         <input id="comment-${p.id}" placeholder="Comment..."
           class="w-full mt-2 p-2 bg-gray-900 border border-gray-700 rounded">
 
-        <button onclick="addComment('${p.id}','${p.username}')" class="text-blue-400">
+        <button onclick="addComment('${p.id}')" class="text-blue-400">
           Reply
         </button>
 
@@ -216,19 +217,16 @@ function renderPosts(posts) {
   });
 }
 
-// 🔍 SEARCH
+// 🔍 Search
 const searchBox = document.getElementById("searchInput");
 
 if (searchBox) {
   searchBox.addEventListener("input", (e) => {
-    const value = e.target.value.toLowerCase();
-
-    const filtered = allPosts.filter((p) =>
-      p.username.toLowerCase().includes(value) ||
-      p.text.toLowerCase().includes(value)
-    );
-
-    renderPosts(filtered);
+    const v = e.target.value.toLowerCase();
+    renderPosts(allPosts.filter(p =>
+      p.username.toLowerCase().includes(v) ||
+      p.text.toLowerCase().includes(v)
+    ));
   });
 }
 
