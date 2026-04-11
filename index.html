@@ -6,7 +6,6 @@
   <title>JustTypeWeb</title>
 
   <script src="https://cdn.tailwindcss.com"></script>
-  <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
 </head>
 
 <body class="bg-black text-white">
@@ -22,7 +21,6 @@
       <div onclick="showNotifications()" class="cursor-pointer hover:text-blue-400">🔔 Notifications</div>
       <div onclick="showExplore()" class="cursor-pointer hover:text-blue-400">🔍 Explore</div>
       <div onclick="showAbout()" class="cursor-pointer hover:text-blue-400">📄 About</div>
-      <div onclick="showDonate()" class="cursor-pointer hover:text-blue-400">💰 Donate</div>
     </div>
   </div>
 
@@ -31,7 +29,6 @@
 
     <!-- HOME -->
     <div id="homeSection">
-
       <input id="username" placeholder="Username"
         class="w-full p-2 mb-2 bg-gray-900 border border-gray-700 rounded">
 
@@ -48,47 +45,36 @@
       <div id="posts" class="mt-4"></div>
     </div>
 
-    <!-- Notifications -->
+    <!-- NOTIFICATIONS -->
     <div id="notificationSection" class="hidden">
       <h2 class="text-xl text-blue-400 mb-2">Notifications 🔔</h2>
       <div id="notifications"></div>
     </div>
 
-    <!-- Explore -->
+    <!-- EXPLORE -->
     <div id="exploreSection" class="hidden">
       <h2 class="text-xl text-blue-400 mb-2">Explore 🔍</h2>
       <div id="explorePosts"></div>
     </div>
 
-    <!-- About -->
+    <!-- ABOUT -->
     <div id="aboutSection" class="hidden">
       <h2 class="text-xl text-blue-400 mb-2">About 🚀</h2>
       <p class="text-gray-300">
-        JustTypeWeb is a lightweight social media platform where users can share thoughts instantly,
-        interact through comments and likes, and explore trending content in real time.
+        JustTypeWeb is a lightweight real-time social media platform where users can share thoughts,
+        interact via comments and likes, and explore trending content instantly.
       </p>
     </div>
 
-    <!-- Donate -->
-    <div id="donateSection" class="hidden">
-      <h2 class="text-xl text-blue-400 mb-2">Support 💰</h2>
-
-      <button onclick="payNow()" class="bg-green-500 px-4 py-2 rounded w-full">
-        Donate ₹
-      </button>
-    </div>
-
   </div>
-
 </div>
 
-<!-- Mobile Bottom Nav -->
+<!-- 📱 Mobile Bottom Nav -->
 <div class="fixed bottom-0 left-0 w-full bg-black border-t border-gray-700 flex justify-around p-3 md:hidden">
   <div onclick="showHome()">🏠</div>
   <div onclick="showNotifications()">🔔</div>
   <div onclick="showExplore()">🔍</div>
   <div onclick="showAbout()">📄</div>
-  <div onclick="showDonate()">💰</div>
 </div>
 
 <script type="module" src="script.js"></script>
