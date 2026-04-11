@@ -10,12 +10,16 @@ import {
   serverTimestamp
 } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
-// 🔥 PASTE YOUR CONFIG HERE
 const firebaseConfig = {
-  apiKey: "YOUR_API_KEY",
-  authDomain: "YOUR_PROJECT.firebaseapp.com",
-  projectId: "YOUR_PROJECT_ID",
+  apiKey: "AIzaSyDKwUAMfUYFyX3jDFG4-XC-np80Og6Ebko",
+  authDomain: "justtypeweb-9bfe5.firebaseapp.com",
+  projectId: "justtypeweb-9bfe5",
+  storageBucket: "justtypeweb-9bfe5.firebasestorage.app",
+  messagingSenderId: "318534544846",
+  appId: "1:318534544846:web:09055eaddd0b34dc094f9f",
+  measurementId: "G-3W8D2KFHTY"
 };
+
 
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
