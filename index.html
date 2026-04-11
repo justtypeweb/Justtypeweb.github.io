@@ -7,7 +7,7 @@
 
   <script src="https://cdn.tailwindcss.com"></script>
 
-  <!-- Google AdSense -->
+  <!-- AdSense -->
   <script async 
     src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9966062812451377"
     crossorigin="anonymous"></script>
@@ -15,92 +15,64 @@
 
 <body class="bg-black text-white">
 
-<div class="flex max-w-6xl mx-auto">
-
-  <!-- 🔥 SIDEBAR (DESKTOP ONLY) -->
-  <div class="hidden md:flex w-20 min-h-screen p-2 border-r border-gray-800 flex-col items-center gap-4">
-
-    <button onclick="showHome()" class="p-3 bg-gray-900 rounded-lg hover:bg-gray-800">🏠</button>
-    <button onclick="showNotifications()" class="p-3 bg-gray-900 rounded-lg hover:bg-gray-800">🔔</button>
-    <button onclick="showExplore()" class="p-3 bg-gray-900 rounded-lg hover:bg-gray-800">🔍</button>
-    <button onclick="showAbout()" class="p-3 bg-gray-900 rounded-lg hover:bg-gray-800">📄</button>
-
-  </div>
-
-  <!-- 🔥 MAIN CONTENT -->
-  <div class="flex-1 p-4 pb-32">
-
-    <!-- 📱 MOBILE HEADER -->
-    <h1 class="text-center text-blue-400 font-bold text-lg mb-4 md:hidden">
-      JustTypeWeb
-    </h1>
-
-    <!-- 💻 DESKTOP TITLE -->
-    <h1 class="hidden md:block text-xl text-blue-400 font-bold mb-4">
-      JustTypeWeb
-    </h1>
-
-    <!-- 🔝 TOP AD -->
-    <div class="my-4 text-center">
-      <ins class="adsbygoogle"
-           style="display:block"
-           data-ad-client="ca-pub-9966062812451377"
-           data-ad-slot="1234567890"
-           data-ad-format="auto"></ins>
-    </div>
-
-    <!-- HOME -->
-    <div id="homeSection">
-
-      <input id="username" placeholder="Username"
-        class="w-full p-3 mb-3 bg-gray-900 border border-gray-700 rounded-lg">
-
-      <textarea id="postInput" placeholder="What's happening?"
-        class="w-full p-3 bg-gray-900 border border-gray-700 rounded-lg h-24"></textarea>
-
-      <button onclick="addPost()"
-        class="bg-blue-500 hover:bg-blue-600 px-4 py-3 mt-3 rounded-lg w-full font-bold">
-        Post
-      </button>
-
-      <input id="searchInput"
-        placeholder="Search..."
-        class="w-full p-3 mt-4 bg-gray-900 border border-gray-700 rounded-lg">
-
-      <div id="posts" class="mt-6 space-y-4"></div>
-
-    </div>
-
-    <!-- NOTIFICATIONS -->
-    <div id="notificationSection" class="hidden">
-      <h2 class="text-xl mb-3 text-blue-400">Notifications</h2>
-      <div id="notifications"></div>
-    </div>
-
-    <!-- EXPLORE -->
-    <div id="exploreSection" class="hidden">
-      <h2 class="text-xl mb-3 text-blue-400">Explore</h2>
-      <div id="explorePosts"></div>
-    </div>
-
-    <!-- ABOUT -->
-    <div id="aboutSection" class="hidden">
-      <h2 class="text-xl mb-3 text-blue-400">About</h2>
-      <p class="text-gray-300">
-        JustTypeWeb is a modern social platform where users can share thoughts instantly.
-      </p>
-    </div>
-
-  </div>
+<!-- 🔝 HEADER -->
+<div class="sticky top-0 bg-black z-50 border-b border-gray-800 text-center py-3">
+  <h1 class="text-blue-400 font-bold text-lg tracking-wide">
+    JustTypeWeb
+  </h1>
 </div>
 
-<!-- 📱 MOBILE BOTTOM NAV -->
-<div class="fixed bottom-0 left-0 w-full bg-black border-t border-gray-800 flex justify-around items-center py-3 md:hidden z-50">
+<!-- 🔥 MAIN -->
+<div class="max-w-md mx-auto px-3 pb-32">
 
-  <button onclick="showHome()" class="text-gray-400 text-xl">🏠</button>
-  <button onclick="showNotifications()" class="text-gray-400 text-xl">🔔</button>
-  <button onclick="showExplore()" class="text-gray-400 text-xl">🔍</button>
-  <button onclick="showAbout()" class="text-gray-400 text-xl">📄</button>
+  <!-- POST BOX -->
+  <div class="bg-gray-900 p-4 rounded-xl mt-4 shadow-lg">
+
+    <input id="username" placeholder="Username"
+      class="w-full p-3 mb-3 bg-black border border-gray-700 rounded-lg">
+
+    <textarea id="postInput" placeholder="What's happening?"
+      class="w-full p-3 bg-black border border-gray-700 rounded-lg h-24"></textarea>
+
+    <button onclick="addPost()"
+      class="bg-blue-500 hover:bg-blue-600 mt-3 w-full py-3 rounded-lg font-bold">
+      Post
+    </button>
+
+  </div>
+
+  <!-- SEARCH -->
+  <input id="searchInput"
+    placeholder="Search..."
+    class="w-full p-3 mt-4 bg-gray-900 border border-gray-700 rounded-lg">
+
+  <!-- POSTS -->
+  <div id="posts" class="mt-4 space-y-4"></div>
+
+</div>
+
+<!-- 📱 BOTTOM NAV (MODERN) -->
+<div class="fixed bottom-0 left-0 w-full bg-black border-t border-gray-800 flex justify-around items-center py-2 z-50">
+
+  <button onclick="showHome()" class="flex flex-col items-center text-gray-400 hover:text-blue-400">
+    🏠
+    <span class="text-xs">Home</span>
+  </button>
+
+  <button onclick="showNotifications()" class="flex flex-col items-center text-gray-400 hover:text-blue-400">
+    🔔
+    <span class="text-xs">Alerts</span>
+  </button>
+
+  <button onclick="showExplore()" class="flex flex-col items-center text-gray-400 hover:text-blue-400">
+    🔍
+    <span class="text-xs">Search</span>
+  </button>
+
+  <button onclick="showAbout()" class="flex flex-col items-center text-gray-400 hover:text-blue-400">
+    📄
+    <span class="text-xs">About</span>
+  </button>
 
 </div>
 
