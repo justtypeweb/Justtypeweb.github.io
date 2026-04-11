@@ -4,14 +4,19 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>JustTypeWeb</title>
+
   <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- ✅ Google AdSense -->
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9966062812451377"
+     crossorigin="anonymous"></script>
 </head>
 
 <body class="bg-black text-white">
 
 <div class="flex max-w-6xl mx-auto">
 
-  <!-- Sidebar (Desktop) -->
+  <!-- Sidebar -->
   <div class="hidden md:block w-1/4 p-4 border-r border-gray-700">
     <h1 class="text-2xl font-bold mb-6 text-blue-400">JustTypeWeb</h1>
 
@@ -20,12 +25,20 @@
       <div onclick="showNotifications()" class="cursor-pointer hover:text-blue-400">🔔 Notifications</div>
       <div onclick="showExplore()" class="cursor-pointer hover:text-blue-400">🔍 Explore</div>
       <div onclick="showAbout()" class="cursor-pointer hover:text-blue-400">📄 About</div>
-      <div onclick="showDonate()" class="cursor-pointer hover:text-blue-400">💰 Donate</div>
     </div>
   </div>
 
   <!-- Main -->
   <div class="w-full md:w-2/4 p-4 pb-20">
+
+    <!-- 🔝 TOP AD -->
+    <div class="my-4 text-center">
+      <ins class="adsbygoogle"
+           style="display:block"
+           data-ad-client="ca-pub-9966062812451377"
+           data-ad-slot="1234567890"
+           data-ad-format="auto"></ins>
+    </div>
 
     <!-- HOME -->
     <div id="homeSection">
@@ -69,16 +82,7 @@
       </p>
     </div>
 
-    <!-- DONATE -->
-    <div id="donateSection" class="hidden">
-      <h2 class="text-xl mb-2 text-blue-400">Support Us 💰</h2>
-      <button class="bg-green-500 px-4 py-2 rounded w-full">
-        Donate ₹
-      </button>
-    </div>
-
   </div>
-
 </div>
 
 <!-- 📱 Mobile Bottom Navigation -->
@@ -87,8 +91,12 @@
   <div onclick="showNotifications()">🔔</div>
   <div onclick="showExplore()">🔍</div>
   <div onclick="showAbout()">📄</div>
-  <div onclick="showDonate()">💰</div>
 </div>
+
+<!-- ✅ AdSense Init -->
+<script>
+  (adsbygoogle = window.adsbygoogle || []).push({});
+</script>
 
 <script type="module" src="script.js"></script>
 
