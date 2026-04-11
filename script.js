@@ -36,12 +36,18 @@ window.addPost = async function () {
     return;
   }
 
+  // Disable button (UX improvement)
+  document.querySelector("button").innerText = "Posting...";
+
   await addDoc(collection(db, "posts"), {
     username,
     text,
     time: serverTimestamp()
   });
 
+  document.getElementById("postInput").value = "";
+  document.querySelector("button").innerText = "Post";
+};
   document.getElementById("postInput").value = "";
 };
 
@@ -86,3 +92,4 @@ onSnapshot(q, (snapshot) => {
     `;
   });
 });
+document.getElementById("postInput").focus();
