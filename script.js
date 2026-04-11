@@ -92,4 +92,6 @@ onSnapshot(q, (snapshot) => {
     `;
   });
 });
-document.getElementById("postInput").focus();
+window.onload = () => {
+  document.getElementById("postInput").focus();
+};
