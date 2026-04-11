@@ -4,23 +4,21 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>JustTypeWeb</title>
-
   <script src="https://cdn.tailwindcss.com"></script>
-  <link rel="stylesheet" href="style.css">
 </head>
 
-<body>
+<body class="bg-black text-white">
 
 <div class="flex max-w-6xl mx-auto">
 
   <!-- Sidebar -->
-  <div class="hidden md:block w-1/4 p-4 sidebar">
-    <h1 class="logo">JustTypeWeb</h1>
+  <div class="hidden md:block w-1/4 p-4 border-r border-gray-700">
+    <h1 class="text-2xl font-bold mb-6 text-blue-400">JustTypeWeb</h1>
 
-    <div class="menu">
-      <div onclick="showHome()">🏠 Home</div>
-      <div onclick="showNotifications()">🔔 Notifications</div>
-      <div onclick="showExplore()">🔍 Explore</div>
+    <div class="space-y-4">
+      <div onclick="showHome()" class="cursor-pointer hover:text-blue-400">🏠 Home</div>
+      <div onclick="showNotifications()" class="cursor-pointer hover:text-blue-400">🔔 Notifications</div>
+      <div onclick="showExplore()" class="cursor-pointer hover:text-blue-400">🔍 Explore</div>
     </div>
   </div>
 
@@ -30,26 +28,34 @@
     <!-- HOME -->
     <div id="homeSection">
 
-      <input id="username" placeholder="Username" />
-      <textarea id="postInput" placeholder="What's happening?"></textarea>
+      <input id="username" placeholder="Username"
+        class="w-full p-2 mb-2 bg-gray-900 border border-gray-700 rounded">
 
-      <button onclick="addPost()">Post</button>
+      <textarea id="postInput" placeholder="What's happening?"
+        class="w-full p-2 bg-gray-900 border border-gray-700 rounded"></textarea>
 
-      <input id="searchInput" placeholder="Search..." />
+      <button onclick="addPost()"
+        class="bg-blue-500 px-4 py-2 mt-2 rounded w-full">
+        Post
+      </button>
 
-      <div id="posts"></div>
+      <input id="searchInput"
+        placeholder="Search..."
+        class="w-full p-2 mt-4 bg-gray-900 border border-gray-700 rounded">
+
+      <div id="posts" class="mt-4"></div>
 
     </div>
 
-    <!-- Notifications -->
+    <!-- NOTIFICATIONS -->
     <div id="notificationSection" class="hidden">
-      <h2 class="title">Notifications 🔔</h2>
+      <h2 class="text-xl mb-2 text-blue-400">Notifications 🔔</h2>
       <div id="notifications"></div>
     </div>
 
-    <!-- Explore -->
+    <!-- EXPLORE -->
     <div id="exploreSection" class="hidden">
-      <h2 class="title">Explore 🔍</h2>
+      <h2 class="text-xl mb-2 text-blue-400">Explore 🔍</h2>
       <div id="explorePosts"></div>
     </div>
 
