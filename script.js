@@ -1,31 +1,149 @@
-// 🎯 Render Posts (UPDATED UI COLORS)
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+
+import {
+  getFirestore,
+  collection,
+  addDoc,
+  onSnapshot,
+  query,
+  orderBy,
+  serverTimestamp,
+  doc,
+  updateDoc,
+  increment
+} from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyDKwUAMfUYFyX3jDFG4-XC-np80Og6Ebko",
+  authDomain: "justtypeweb-9bfe5.firebaseapp.com",
+  projectId: "justtypeweb-9bfe5",
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+
+let allPosts = [];
+
+const postsDiv = document.getElementById("posts");
+const notifDiv = document.getElementById("notifications");
+
+// 🔔 Notification
+async function sendNotification(toUser, message) {
+  await addDoc(collection(db, "notifications"), {
+    toUser,
+    message,
+    time: serverTimestamp()
+  });
+}
+
+// ❤️ Like
+window.likePost = async function (id, owner) {
+  await updateDoc(doc(db, "posts", id), {
+    likes: increment(1)
+  });
+
+  sendNotification(owner, "❤️ Someone liked your post");
+};
+
+// 💬 Comment
+window.addComment = async function (postId, owner) {
+  const input = document.getElementById(`comment-${postId}`);
+  if (!input) return;
+
+  const text = input.value;
+  if (!text) return;
+
+  await addDoc(collection(db, "posts", postId, "comments"), {
+    text,
+    time: serverTimestamp()
+  });
+
+  input.value = "";
+  sendNotification(owner, "💬 Someone commented");
+};
+
+// 💬 Load Comments
+function loadComments(postId) {
+  const commentsDiv = document.getElementById(`comments-${postId}`);
+  if (!commentsDiv) return;
+
+  const q = query(
+    collection(db, "posts", postId, "comments"),
+    orderBy("time", "asc")
+  );
+
+  onSnapshot(q, (snapshot) => {
+    commentsDiv.innerHTML = "";
+
+    snapshot.forEach((docItem) => {
+      const data = docItem.data();
+
+      commentsDiv.innerHTML += `
+        <div style="margin-left:20px;color:#888">
+          💬 ${data.text}
+        </div>
+      `;
+    });
+  });
+}
+
+// 🚀 Add Post
+window.addPost = async function () {
+  const username = document.getElementById("username").value;
+  const text = document.getElementById("postInput").value;
+
+  if (!username || !text) {
+    alert("Enter username and post!");
+    return;
+  }
+
+  localStorage.setItem("username", username);
+
+  await addDoc(collection(db, "posts"), {
+    username,
+    text,
+    time: serverTimestamp(),
+    likes: 0
+  });
+
+  document.getElementById("postInput").value = "";
+};
+
+// 📡 Load Posts
+const q = query(collection(db, "posts"), orderBy("time", "desc"));
+
+onSnapshot(q, (snapshot) => {
+  allPosts = [];
+
+  snapshot.forEach((docItem) => {
+    allPosts.push({
+      id: docItem.id,
+      ...docItem.data()
+    });
+  });
+
+  renderPosts(allPosts);
+});
+
+// 🎯 Render Posts
 function renderPosts(posts) {
   postsDiv.innerHTML = "";
 
   posts.forEach((data) => {
     postsDiv.innerHTML += `
-      <div class="border-b border-[#444444] p-4">
+      <div style="border-bottom:1px solid #444;padding:10px">
 
-        <b class="text-[#E0E0E0]">@${data.username}</b>
-        <p class="text-[#B0B0B0]">${data.text}</p>
+        <b>@${data.username}</b>
+        <p>${data.text}</p>
 
-        <div class="flex gap-4 mt-2 text-[#888888]">
-          <span onclick="likePost('${data.id}','${data.username}')" 
-                class="cursor-pointer hover:text-red-400">
-            ❤️ ${data.likes || 0}
-          </span>
-        </div>
+        <span onclick="likePost('${data.id}','${data.username}')">
+          ❤️ ${data.likes || 0}
+        </span>
 
-        <input id="comment-${data.id}" placeholder="Comment..."
-          class="w-full mt-2 p-2 bg-[#1e1e1e] text-white border border-[#444444] rounded">
-
-        <button onclick="addComment('${data.id}','${data.username}')"
-          class="text-[#888888] hover:text-white mt-1">
-          Reply
-        </button>
+        <input id="comment-${data.id}" placeholder="comment..." />
+        <button onclick="addComment('${data.id}','${data.username}')">Reply</button>
 
         <div id="comments-${data.id}"></div>
-
       </div>
     `;
 
@@ -33,25 +151,7 @@ function renderPosts(posts) {
   });
 }
 
-// 🔍 Explore UI
-function renderExplore() {
-  const div = document.getElementById("explorePosts");
-  div.innerHTML = "";
-
-  const sorted = [...allPosts].sort((a, b) => (b.likes || 0) - (a.likes || 0));
-
-  sorted.forEach((p) => {
-    div.innerHTML += `
-      <div class="border-b border-[#444444] p-3">
-        <b class="text-[#E0E0E0]">@${p.username}</b>
-        <p class="text-[#B0B0B0]">${p.text}</p>
-        <span class="text-[#888888]">❤️ ${p.likes || 0}</span>
-      </div>
-    `;
-  });
-}
-
-// 🔔 Notifications UI
+// 🔔 Notifications
 function loadNotifications(username) {
   const q = query(collection(db, "notifications"), orderBy("time", "desc"));
 
@@ -62,12 +162,18 @@ function loadNotifications(username) {
       const data = docItem.data();
 
       if (data.toUser === username) {
-        notifDiv.innerHTML += `
-          <div class="bg-[#1e1e1e] p-2 rounded border border-[#444444] text-[#B0B0B0]">
-            ${data.message}
-          </div>
-        `;
+        notifDiv.innerHTML += `<div>${data.message}</div>`;
       }
     });
   });
 }
+
+// 👤 Load User
+window.onload = () => {
+  const saved = localStorage.getItem("username");
+
+  if (saved) {
+    document.getElementById("username").value = saved;
+    loadNotifications(saved);
+  }
+};
