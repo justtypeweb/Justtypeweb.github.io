@@ -13,6 +13,7 @@ import {
   increment
 } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
+// Firebase Config
 const firebaseConfig = {
   apiKey: "AIzaSyDKwUAMfUYFyX3jDFG4-XC-np80Og6Ebko",
   authDomain: "justtypeweb-9bfe5.firebaseapp.com",
@@ -23,16 +24,70 @@ const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
 const postsDiv = document.getElementById("posts");
+const notifDiv = document.getElementById("notifications");
 
 let allPosts = [];
 
+// 🔔 Send Notification
+async function sendNotification(toUser, message) {
+  await addDoc(collection(db, "notifications"), {
+    toUser,
+    message,
+    time: serverTimestamp()
+  });
+}
+
 // ❤️ Like
-window.likePost = async function (id) {
+window.likePost = async function (id, owner) {
   const postRef = doc(db, "posts", id);
+
   await updateDoc(postRef, {
     likes: increment(1)
   });
+
+  sendNotification(owner, "❤️ Someone liked your post");
 };
+
+// 💬 Comment
+window.addComment = async function (postId, owner) {
+  const input = document.getElementById(`comment-${postId}`);
+  const text = input.value;
+
+  if (!text) return;
+
+  await addDoc(collection(db, "posts", postId, "comments"), {
+    text,
+    time: serverTimestamp()
+  });
+
+  input.value = "";
+
+  sendNotification(owner, "💬 Someone commented on your post");
+};
+
+// 💬 Load Comments
+function loadComments(postId) {
+  const commentsDiv = document.getElementById(`comments-${postId}`);
+
+  const q = query(
+    collection(db, "posts", postId, "comments"),
+    orderBy("time", "asc")
+  );
+
+  onSnapshot(q, (snapshot) => {
+    commentsDiv.innerHTML = "";
+
+    snapshot.forEach((docItem) => {
+      const data = docItem.data();
+
+      commentsDiv.innerHTML += `
+        <div class="text-sm text-gray-400 ml-12 mt-1">
+          💬 ${data.text}
+        </div>
+      `;
+    });
+  });
+}
 
 // 🚀 Add Post
 window.addPost = async function () {
@@ -72,7 +127,7 @@ onSnapshot(q, (snapshot) => {
   renderPosts(allPosts);
 });
 
-// 🎯 Render
+// 🎯 Render Posts
 function renderPosts(posts) {
   postsDiv.innerHTML = "";
 
@@ -100,14 +155,34 @@ function renderPosts(posts) {
           </p>
 
           <div class="flex gap-6 mt-3 text-gray-400 text-sm">
-            <span onclick="likePost('${data.id}')" class="cursor-pointer hover:text-red-500">
+            <span onclick="likePost('${data.id}','${data.username}')" class="cursor-pointer hover:text-red-500">
               ❤️ ${data.likes || 0}
             </span>
+            <span>💬</span>
+          </div>
+
+          <!-- Comment Input -->
+          <div class="ml-12 mt-2">
+            <input 
+              id="comment-${data.id}"
+              placeholder="Write a comment..."
+              class="w-full p-2 text-black rounded text-sm"
+            />
+
+            <button 
+              onclick="addComment('${data.id}','${data.username}')"
+              class="text-blue-400 text-sm mt-1">
+              Reply
+            </button>
+
+            <div id="comments-${data.id}"></div>
           </div>
 
         </div>
       </div>
     `;
+
+    loadComments(data.id);
   });
 }
 
@@ -123,13 +198,40 @@ document.getElementById("searchInput").addEventListener("input", (e) => {
   renderPosts(filtered);
 });
 
-// 👤 Load username
+// 🔔 Load Notifications
+function loadNotifications(username) {
+  const q = query(
+    collection(db, "notifications"),
+    orderBy("time", "desc")
+  );
+
+  onSnapshot(q, (snapshot) => {
+    notifDiv.innerHTML = "";
+
+    snapshot.forEach((docItem) => {
+      const data = docItem.data();
+
+      if (data.toUser === username) {
+        notifDiv.innerHTML += `
+          <div class="bg-black p-2 rounded">
+            ${data.message}
+          </div>
+        `;
+      }
+    });
+  });
+}
+
+// 👤 Load User
 window.onload = () => {
   const savedUsername = localStorage.getItem("username");
 
   if (savedUsername) {
-    document.getElementById("username").value = savedUsername;
-    document.getElementById("username").disabled = true;
+    const userField = document.getElementById("username");
+    userField.value = savedUsername;
+    userField.disabled = true;
+
+    loadNotifications(savedUsername);
   }
 
   document.getElementById("postInput").focus();
