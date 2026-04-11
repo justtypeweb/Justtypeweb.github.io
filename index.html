@@ -15,63 +15,71 @@
 
 <body class="bg-black text-white">
 
-<!-- 🔝 HEADER -->
-<div class="sticky top-0 bg-black z-50 border-b border-gray-800 text-center py-3">
-  <h1 class="text-blue-400 font-bold text-lg tracking-wide">
-    JustTypeWeb
-  </h1>
-</div>
+<div class="flex w-full">
 
-<!-- 🔥 MAIN -->
-<div class="max-w-md mx-auto px-3 pb-32">
+  <!-- 🔥 LEFT SIDEBAR (DESKTOP ONLY - ICONS ONLY) -->
+  <div class="hidden md:flex w-16 min-h-screen border-r border-gray-800 flex-col items-center py-4 gap-4">
 
-  <!-- POST BOX -->
-  <div class="bg-gray-900 p-4 rounded-xl mt-4 shadow-lg">
-
-    <input id="username" placeholder="Username"
-      class="w-full p-3 mb-3 bg-black border border-gray-700 rounded-lg">
-
-    <textarea id="postInput" placeholder="What's happening?"
-      class="w-full p-3 bg-black border border-gray-700 rounded-lg h-24"></textarea>
-
-    <button onclick="addPost()"
-      class="bg-blue-500 hover:bg-blue-600 mt-3 w-full py-3 rounded-lg font-bold">
-      Post
-    </button>
+    <button onclick="showHome()" class="p-3 bg-gray-900 rounded-lg hover:bg-gray-800">🏠</button>
+    <button onclick="showNotifications()" class="p-3 bg-gray-900 rounded-lg hover:bg-gray-800">🔔</button>
+    <button onclick="showExplore()" class="p-3 bg-gray-900 rounded-lg hover:bg-gray-800">🔍</button>
+    <button onclick="showAbout()" class="p-3 bg-gray-900 rounded-lg hover:bg-gray-800">📄</button>
 
   </div>
 
-  <!-- SEARCH -->
-  <input id="searchInput"
-    placeholder="Search..."
-    class="w-full p-3 mt-4 bg-gray-900 border border-gray-700 rounded-lg">
+  <!-- 🔥 MAIN CONTENT (FULL WIDTH FIXED) -->
+  <div class="flex-1 max-w-2xl mx-auto px-3 pb-32">
 
-  <!-- POSTS -->
-  <div id="posts" class="mt-4 space-y-4"></div>
+    <!-- HEADER -->
+    <div class="sticky top-0 bg-black z-50 border-b border-gray-800 text-center py-3">
+      <h1 class="text-blue-400 font-bold text-lg">JustTypeWeb</h1>
+    </div>
+
+    <!-- POST BOX -->
+    <div class="bg-gray-900 p-4 rounded-xl mt-4 shadow">
+
+      <input id="username" placeholder="Username"
+        class="w-full p-3 mb-3 bg-black border border-gray-700 rounded-lg">
+
+      <textarea id="postInput" placeholder="What's happening?"
+        class="w-full p-3 bg-black border border-gray-700 rounded-lg h-24"></textarea>
+
+      <button onclick="addPost()"
+        class="bg-blue-500 hover:bg-blue-600 mt-3 w-full py-3 rounded-lg font-bold">
+        Post
+      </button>
+
+    </div>
+
+    <!-- SEARCH -->
+    <input id="searchInput"
+      placeholder="Search..."
+      class="w-full p-3 mt-4 bg-gray-900 border border-gray-700 rounded-lg">
+
+    <!-- POSTS -->
+    <div id="posts" class="mt-4 space-y-4"></div>
+
+  </div>
 
 </div>
 
-<!-- 📱 BOTTOM NAV (MODERN) -->
-<div class="fixed bottom-0 left-0 w-full bg-black border-t border-gray-800 flex justify-around items-center py-2 z-50">
+<!-- 📱 MOBILE BOTTOM NAV -->
+<div class="fixed bottom-0 left-0 w-full bg-black border-t border-gray-800 flex justify-around items-center py-2 md:hidden z-50">
 
-  <button onclick="showHome()" class="flex flex-col items-center text-gray-400 hover:text-blue-400">
-    🏠
-    <span class="text-xs">Home</span>
+  <button onclick="showHome()" class="flex flex-col items-center text-gray-400">
+    🏠 <span class="text-xs">Home</span>
   </button>
 
-  <button onclick="showNotifications()" class="flex flex-col items-center text-gray-400 hover:text-blue-400">
-    🔔
-    <span class="text-xs">Alerts</span>
+  <button onclick="showNotifications()" class="flex flex-col items-center text-gray-400">
+    🔔 <span class="text-xs">Alerts</span>
   </button>
 
-  <button onclick="showExplore()" class="flex flex-col items-center text-gray-400 hover:text-blue-400">
-    🔍
-    <span class="text-xs">Search</span>
+  <button onclick="showExplore()" class="flex flex-col items-center text-gray-400">
+    🔍 <span class="text-xs">Search</span>
   </button>
 
-  <button onclick="showAbout()" class="flex flex-col items-center text-gray-400 hover:text-blue-400">
-    📄
-    <span class="text-xs">About</span>
+  <button onclick="showAbout()" class="flex flex-col items-center text-gray-400">
+    📄 <span class="text-xs">About</span>
   </button>
 
 </div>
