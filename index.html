@@ -1,70 +1,33 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Video Streaming</title>
-
-  <style>
-    body {
-      margin: 0;
-      background: black;
-      color: white;
-      text-align: center;
-      font-family: Arial, sans-serif;
-    }
-
-    .player-container {
-      position: relative;
-      width: 100%;
-      max-width: 900px;
-      margin: auto;
-    }
-
-    .player-container iframe {
-      width: 100%;
-      height: 500px;
-      border: none;
-    }
-
-    .contact-btn {
-      margin: 20px;
-      padding: 12px 25px;
-      background: #ff4c4c;
-      color: white;
-      border: none;
-      border-radius: 5px;
-      font-size: 16px;
-      cursor: pointer;
-      transition: 0.3s;
-    }
-
-    .contact-btn:hover {
-      background: #ff1a1a;
-    }
-
-    @media (max-width: 600px) {
-      .player-container iframe {
-        height: 220px;
-      }
-    }
-  </style>
+  <meta charset="UTF-8">
+  <title>JustTypeWeb</title>
+  <script src="https://cdn.tailwindcss.com"></script>
 </head>
 
-<body>
+<body class="bg-black text-white">
 
-  <h2>🎬 RENT STREAMING</h2>
+<div class="max-w-xl mx-auto p-4">
 
-  <div class="player-container">
-    <iframe 
-      src="https://streaming.seekplayer.me/#h6pim" width="100%" height="100%" frameborder="0" allowfullscreen>
- 
-    </iframe>
-  </div>
+  <h1 class="text-3xl font-bold text-center mb-4">JustTypeWeb</h1>
 
-  <!-- Contact Button -->
-  <a href="https://docs.google.com/forms/d/e/1FAIpQLScvXN7s8PSEej5NL7FbwjQLk9Udgk-a18zcfbKSU0wqhLoxng/viewform?usp=dialog" target="_blank">
-    <button class="contact-btn">📩 Contact Information</button>
-  </a>
+  <input id="username" placeholder="Enter username"
+    class="w-full p-2 mb-2 text-black rounded">
+
+  <textarea id="postInput" placeholder="What's happening?"
+    class="w-full p-2 text-black rounded"></textarea>
+
+  <button onclick="addPost()"
+    class="bg-blue-500 px-4 py-2 mt-2 rounded w-full">
+    Post
+  </button>
+
+  <div id="posts" class="mt-6 space-y-4"></div>
+
+</div>
+
+<script type="module" src="script.js"></script>
 
 </body>
 </html>
