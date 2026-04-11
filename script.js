@@ -33,11 +33,10 @@ const username = usernameInput.value;
 // Save username
 localStorage.setItem("username", username);
   const text = document.getElementById("postInput").value;
-
-  if (!username || !text) {
-    alert("Enter username and post!");
-    return;
-  }
+if (!username || !text) {
+  alert("Enter username and post!");
+  return;
+}
 
   document.querySelector("button").innerText = "Posting...";
 
