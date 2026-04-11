@@ -13,6 +13,7 @@ import {
   increment
 } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
+// Firebase config
 const firebaseConfig = {
   apiKey: "AIzaSyDKwUAMfUYFyX3jDFG4-XC-np80Og6Ebko",
   authDomain: "justtypeweb-9bfe5.firebaseapp.com",
@@ -79,7 +80,7 @@ function loadComments(postId) {
       const data = docItem.data();
 
       commentsDiv.innerHTML += `
-        <div style="margin-left:20px;color:#888">
+        <div class="ml-4 text-gray-400 text-sm">
           💬 ${data.text}
         </div>
       `;
@@ -131,17 +132,25 @@ function renderPosts(posts) {
 
   posts.forEach((data) => {
     postsDiv.innerHTML += `
-      <div style="border-bottom:1px solid #444;padding:10px">
+      <div class="border-b border-gray-700 p-4">
 
-        <b>@${data.username}</b>
-        <p>${data.text}</p>
+        <b class="text-blue-400">@${data.username}</b>
+        <p class="text-white">${data.text}</p>
 
-        <span onclick="likePost('${data.id}','${data.username}')">
-          ❤️ ${data.likes || 0}
-        </span>
+        <div class="mt-2">
+          <span onclick="likePost('${data.id}','${data.username}')"
+                class="cursor-pointer text-red-400 hover:text-red-500">
+            ❤️ ${data.likes || 0}
+          </span>
+        </div>
 
-        <input id="comment-${data.id}" placeholder="comment..." />
-        <button onclick="addComment('${data.id}','${data.username}')">Reply</button>
+        <input id="comment-${data.id}" placeholder="Comment..."
+          class="w-full mt-2 p-2 bg-gray-900 border border-gray-700 rounded text-white">
+
+        <button onclick="addComment('${data.id}','${data.username}')"
+          class="text-blue-400 mt-1">
+          Reply
+        </button>
 
         <div id="comments-${data.id}"></div>
       </div>
@@ -150,6 +159,18 @@ function renderPosts(posts) {
     loadComments(data.id);
   });
 }
+
+// 🔍 Search
+document.getElementById("searchInput").addEventListener("input", (e) => {
+  const value = e.target.value.toLowerCase();
+
+  const filtered = allPosts.filter((p) =>
+    p.username.toLowerCase().includes(value) ||
+    p.text.toLowerCase().includes(value)
+  );
+
+  renderPosts(filtered);
+});
 
 // 🔔 Notifications
 function loadNotifications(username) {
@@ -162,13 +183,56 @@ function loadNotifications(username) {
       const data = docItem.data();
 
       if (data.toUser === username) {
-        notifDiv.innerHTML += `<div>${data.message}</div>`;
+        notifDiv.innerHTML += `
+          <div class="bg-gray-900 p-2 rounded border border-gray-700 mb-2">
+            ${data.message}
+          </div>
+        `;
       }
     });
   });
 }
 
-// 👤 Load User
+// 📱 Navigation
+window.showHome = function () {
+  document.getElementById("homeSection").classList.remove("hidden");
+  document.getElementById("notificationSection").classList.add("hidden");
+  document.getElementById("exploreSection").classList.add("hidden");
+};
+
+window.showNotifications = function () {
+  document.getElementById("homeSection").classList.add("hidden");
+  document.getElementById("notificationSection").classList.remove("hidden");
+  document.getElementById("exploreSection").classList.add("hidden");
+};
+
+window.showExplore = function () {
+  document.getElementById("homeSection").classList.add("hidden");
+  document.getElementById("notificationSection").classList.add("hidden");
+  document.getElementById("exploreSection").classList.remove("hidden");
+
+  renderExplore();
+};
+
+// 🔍 Explore
+function renderExplore() {
+  const div = document.getElementById("explorePosts");
+  div.innerHTML = "";
+
+  const sorted = [...allPosts].sort((a, b) => (b.likes || 0) - (a.likes || 0));
+
+  sorted.forEach((p) => {
+    div.innerHTML += `
+      <div class="border-b border-gray-700 p-3">
+        <b class="text-blue-400">@${p.username}</b>
+        <p>${p.text}</p>
+        <span class="text-red-400">❤️ ${p.likes || 0}</span>
+      </div>
+    `;
+  });
+}
+
+// 👤 Load user
 window.onload = () => {
   const saved = localStorage.getItem("username");
 
