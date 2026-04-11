@@ -27,7 +27,11 @@ const postsDiv = document.getElementById("posts");
 
 // 🚀 Add Post
 window.addPost = async function () {
-  const username = document.getElementById("username").value;
+  const usernameInput = document.getElementById("username");
+const username = usernameInput.value;
+
+// Save username
+localStorage.setItem("username", username);
   const text = document.getElementById("postInput").value;
 
   if (!username || !text) {
@@ -85,5 +89,14 @@ onSnapshot(q, (snapshot) => {
 
 // Auto focus
 window.onload = () => {
+  document.getElementById("postInput").focus();
+};
+window.onload = () => {
+  const savedUsername = localStorage.getItem("username");
+
+  if (savedUsername) {
+    document.getElementById("username").value = savedUsername;
+  }
+
   document.getElementById("postInput").focus();
 };
