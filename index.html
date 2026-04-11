@@ -1,42 +1,43 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <title>JustTypeWeb</title>
-  <script src="https://cdn.tailwindcss.com"></script>
-</head>
+<body class="bg-[#CBDDE9] text-black">
 
-<body class="bg-black text-white min-h-screen">
+<!-- Navbar -->
+<div class="fixed top-0 w-full bg-[#2872A1] text-white border-b border-gray-300 p-4 text-center font-bold text-lg z-10">
+  JustTypeWeb
+</div>
 
-<div class="max-w-xl mx-auto p-4 min-h-screen border-x border-gray-800">
-  <!-- Header -->
-  <h1 class="text-3xl font-bold text-center mb-6">
-    JustTypeWeb
-  </h1>
+<!-- Layout -->
+<div class="flex justify-center mt-20">
 
-  <!-- Username -->
-  <input id="username"
-    type="text"
-    placeholder="Enter your username"
-    class="w-full p-3 mb-3 rounded text-black" />
+  <!-- Feed -->
+  <div class="w-full max-w-xl bg-white border-x border-gray-300 min-h-screen p-4">
 
-  <!-- Post Box -->
-  <textarea id="postInput"
-    placeholder="What's happening?"
-    class="w-full p-3 rounded text-black h-24"></textarea>
+    <!-- Post Box -->
+    <div class="border-b border-gray-300 pb-4 mb-4">
 
-  <!-- Post Button -->
-  <button onclick="addPost()"
-    class="bg-blue-500 hover:bg-blue-600 w-full p-3 mt-3 rounded font-bold">
-    Post
-  </button>
+      <input id="username"
+        type="text"
+        placeholder="Username"
+        class="w-full p-2 mb-2 rounded border border-gray-300" />
 
-  <!-- Posts Section -->
-  <div id="posts" class="mt-6 space-y-4"></div>
+      <textarea id="postInput"
+        placeholder="What's happening?"
+        class="w-full p-3 rounded border border-gray-300 h-24"></textarea>
+
+      <button onclick="addPost()"
+        class="bg-[#2872A1] hover:opacity-90 text-white px-4 py-2 mt-2 rounded float-right">
+        Post
+      </button>
+
+      <div class="clear-both"></div>
+    </div>
+
+    <!-- Posts -->
+    <div id="posts" class="space-y-2"></div>
+
+  </div>
 
 </div>
 
 <script type="module" src="script.js"></script>
 
 </body>
-</html>
