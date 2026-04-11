@@ -7,7 +7,7 @@
 
   <script src="https://cdn.tailwindcss.com"></script>
 
-  <!-- Google AdSense -->
+  <!-- AdSense -->
   <script async 
     src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9966062812451377"
     crossorigin="anonymous"></script>
@@ -15,29 +15,43 @@
 
 <body class="bg-black text-white">
 
-<!-- 🔝 MOBILE HEADER -->
-<div class="md:hidden fixed top-0 left-0 w-full bg-black border-b border-gray-700 p-3 text-center z-50">
-  <h1 class="text-lg font-bold text-blue-400">JustTypeWeb</h1>
-</div>
+<div class="flex max-w-6xl mx-auto">
 
-<div class="flex max-w-6xl mx-auto mt-14 md:mt-0">
+  <!-- 🔥 LEFT SIDEBAR (BLOCK STYLE) -->
+  <div class="w-1/4 min-h-screen p-4 border-r border-gray-800">
 
-  <!-- Sidebar (Desktop) -->
-  <div class="hidden md:block w-1/4 p-4 border-r border-gray-700">
-    <h1 class="text-2xl font-bold mb-6 text-blue-400">JustTypeWeb</h1>
+    <h1 class="text-2xl font-bold text-blue-400 mb-6">JustTypeWeb</h1>
 
-    <div class="space-y-4">
-      <div onclick="showHome()" class="cursor-pointer hover:text-blue-400">🏠 Home</div>
-      <div onclick="showNotifications()" class="cursor-pointer hover:text-blue-400">🔔 Notifications</div>
-      <div onclick="showExplore()" class="cursor-pointer hover:text-blue-400">🔍 Explore</div>
-      <div onclick="showAbout()" class="cursor-pointer hover:text-blue-400">📄 About</div>
+    <div class="space-y-3">
+
+      <button onclick="showHome()" 
+        class="w-full flex items-center gap-3 p-3 rounded-lg bg-gray-900 hover:bg-gray-800">
+        🏠 <span>Home</span>
+      </button>
+
+      <button onclick="showNotifications()" 
+        class="w-full flex items-center gap-3 p-3 rounded-lg bg-gray-900 hover:bg-gray-800">
+        🔔 <span>Alerts</span>
+      </button>
+
+      <button onclick="showExplore()" 
+        class="w-full flex items-center gap-3 p-3 rounded-lg bg-gray-900 hover:bg-gray-800">
+        🔍 <span>Search</span>
+      </button>
+
+      <button onclick="showAbout()" 
+        class="w-full flex items-center gap-3 p-3 rounded-lg bg-gray-900 hover:bg-gray-800">
+        📄 <span>About</span>
+      </button>
+
     </div>
+
   </div>
 
-  <!-- Main -->
-  <div class="w-full md:w-2/4 p-4 pb-32">
+  <!-- 🔥 MAIN CONTENT -->
+  <div class="w-3/4 p-4 pb-32">
 
-    <!-- 🔝 TOP AD -->
+    <!-- TOP AD -->
     <div class="my-4 text-center">
       <ins class="adsbygoogle"
            style="display:block"
@@ -89,31 +103,6 @@
     </div>
 
   </div>
-</div>
-
-<!-- 📱 MOBILE NAV (FIXED PERFECTLY) -->
-<div class="fixed bottom-0 left-0 w-full bg-black border-t border-gray-800 flex justify-around items-center py-3 md:hidden z-50 shadow-lg">
-
-  <button onclick="showHome()" class="flex flex-col items-center text-gray-400 hover:text-blue-400">
-    🏠
-    <span class="text-xs">Home</span>
-  </button>
-
-  <button onclick="showNotifications()" class="flex flex-col items-center text-gray-400 hover:text-blue-400">
-    🔔
-    <span class="text-xs">Alerts</span>
-  </button>
-
-  <button onclick="showExplore()" class="flex flex-col items-center text-gray-400 hover:text-blue-400">
-    🔍
-    <span class="text-xs">Explore</span>
-  </button>
-
-  <button onclick="showAbout()" class="flex flex-col items-center text-gray-400 hover:text-blue-400">
-    📄
-    <span class="text-xs">About</span>
-  </button>
-
 </div>
 
 <!-- Activate Ads -->
