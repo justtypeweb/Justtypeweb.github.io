@@ -8,13 +8,19 @@
   <script src="https://cdn.tailwindcss.com"></script>
 
   <!-- ✅ Google AdSense -->
-  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9966062812451377"
-     crossorigin="anonymous"></script>
+  <script async 
+    src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9966062812451377"
+    crossorigin="anonymous"></script>
 </head>
 
 <body class="bg-black text-white">
 
-<div class="flex max-w-6xl mx-auto">
+<!-- 🔝 MOBILE HEADER -->
+<div class="md:hidden fixed top-0 left-0 w-full bg-black border-b border-gray-700 p-3 text-center z-50">
+  <h1 class="text-lg font-bold text-blue-400">JustTypeWeb</h1>
+</div>
+
+<div class="flex max-w-6xl mx-auto mt-14 md:mt-0">
 
   <!-- Sidebar -->
   <div class="hidden md:block w-1/4 p-4 border-r border-gray-700">
@@ -29,7 +35,7 @@
   </div>
 
   <!-- Main -->
-  <div class="w-full md:w-2/4 p-4 pb-20">
+  <div class="w-full md:w-2/4 p-4 pb-24">
 
     <!-- 🔝 TOP AD -->
     <div class="my-4 text-center">
@@ -44,56 +50,57 @@
     <div id="homeSection">
 
       <input id="username" placeholder="Username"
-        class="w-full p-2 mb-2 bg-gray-900 border border-gray-700 rounded">
+        class="w-full p-3 mb-3 bg-gray-900 border border-gray-700 rounded-lg">
 
       <textarea id="postInput" placeholder="What's happening?"
-        class="w-full p-2 bg-gray-900 border border-gray-700 rounded"></textarea>
+        class="w-full p-3 bg-gray-900 border border-gray-700 rounded-lg h-24"></textarea>
 
       <button onclick="addPost()"
-        class="bg-blue-500 px-4 py-2 mt-2 rounded w-full">
+        class="bg-blue-500 hover:bg-blue-600 px-4 py-3 mt-3 rounded-lg w-full font-bold">
         Post
       </button>
 
       <input id="searchInput"
         placeholder="Search..."
-        class="w-full p-2 mt-4 bg-gray-900 border border-gray-700 rounded">
+        class="w-full p-3 mt-4 bg-gray-900 border border-gray-700 rounded-lg">
 
-      <div id="posts" class="mt-4"></div>
+      <div id="posts" class="mt-6 space-y-4"></div>
 
     </div>
 
     <!-- NOTIFICATIONS -->
     <div id="notificationSection" class="hidden">
-      <h2 class="text-xl mb-2 text-blue-400">Notifications 🔔</h2>
+      <h2 class="text-xl mb-3 text-blue-400">Notifications 🔔</h2>
       <div id="notifications"></div>
     </div>
 
     <!-- EXPLORE -->
     <div id="exploreSection" class="hidden">
-      <h2 class="text-xl mb-2 text-blue-400">Explore 🔍</h2>
+      <h2 class="text-xl mb-3 text-blue-400">Explore 🔍</h2>
       <div id="explorePosts"></div>
     </div>
 
     <!-- ABOUT -->
     <div id="aboutSection" class="hidden">
-      <h2 class="text-xl mb-2 text-blue-400">About 📄</h2>
+      <h2 class="text-xl mb-3 text-blue-400">About 📄</h2>
       <p class="text-gray-300">
-        JustTypeWeb is a simple social media platform where anyone can share thoughts instantly.
+        JustTypeWeb is a modern social platform where users can share thoughts instantly.
       </p>
     </div>
 
   </div>
+
 </div>
 
-<!-- 📱 Mobile Bottom Navigation -->
-<div class="fixed bottom-0 left-0 w-full bg-black border-t border-gray-700 flex justify-around p-3 md:hidden">
+<!-- 📱 MOBILE NAV -->
+<div class="fixed bottom-0 left-0 w-full bg-black border-t border-gray-700 flex justify-around p-3 md:hidden text-lg">
   <div onclick="showHome()">🏠</div>
   <div onclick="showNotifications()">🔔</div>
   <div onclick="showExplore()">🔍</div>
   <div onclick="showAbout()">📄</div>
 </div>
 
-<!-- ✅ AdSense Init -->
+<!-- ✅ ACTIVATE ADS -->
 <script>
   (adsbygoogle = window.adsbygoogle || []).push({});
 </script>
