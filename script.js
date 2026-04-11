@@ -67,34 +67,45 @@ onSnapshot(q, (snapshot) => {
     const data = doc.data();
     const firstLetter = data.username.charAt(0).toUpperCase();
 
-    postsDiv.innerHTML += `
-      <div class="bg-gray-900 p-4 rounded-lg flex gap-3 shadow-md">
-        <div class="bg-blue-500 w-10 h-10 flex items-center justify-center rounded-full font-bold">
-          ${firstLetter}
-        </div>
+  postsDiv.innerHTML += `
+  <div class="border-b border-gray-200 p-4 flex gap-3 hover:bg-[#f0f6fa] transition">
 
-        <div class="flex-1">
-          <div class="flex justify-between items-center">
-            <b>@${data.username}</b>
-            <small class="text-gray-400">
-              ${data.time ? data.time.toDate().toLocaleString() : ""}
-            </small>
-          </div>
+    <!-- Avatar -->
+    <div class="bg-[#2872A1] text-white w-10 h-10 flex items-center justify-center rounded-full font-bold">
+      ${firstLetter}
+    </div>
 
-          <p class="mt-1">${data.text}</p>
+    <!-- Content -->
+    <div class="flex-1">
 
-          <div class="flex gap-4 mt-2 text-gray-400 text-sm">
-          <span onclick="likePost('${doc.id}')" 
-      class="hover:text-red-500 cursor-pointer">
-  ❤️ ${data.likes || 0}
-</span>
-            <span>💬 Reply</span>
-          </div>
-        </div>
+      <div class="flex justify-between items-center">
+        <b class="text-[#2872A1]">@${data.username}</b>
+        <span class="text-gray-500 text-xs">
+          ${data.time ? data.time.toDate().toLocaleString() : ""}
+        </span>
       </div>
-    `;
-  });
-});
+
+      <p class="mt-1 text-sm text-gray-800 break-words">
+        ${data.text}
+      </p>
+
+      <!-- Actions -->
+      <div class="flex gap-6 mt-3 text-gray-500 text-sm">
+
+        <span onclick="likePost('${doc.id}')" 
+              class="cursor-pointer hover:text-red-500">
+          ❤️ ${data.likes || 0}
+        </span>
+
+        <span class="cursor-pointer hover:text-blue-400">💬</span>
+        <span class="cursor-pointer hover:text-green-400">🔁</span>
+
+      </div>
+
+    </div>
+
+  </div>
+`;
 
 // Auto focus
 window.onload = () => {
