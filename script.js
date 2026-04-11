@@ -6,7 +6,7 @@ import {
 } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
 const firebaseConfig = {
-  apiKey: "YOUR_API_KEY",
+  apiKey: "AIzaSyDKwUAMfUYFyX3jDFG4-XC-np80Og6Ebko",
   authDomain: "justtypeweb-9bfe5.firebaseapp.com",
   projectId: "justtypeweb-9bfe5",
 };
@@ -20,30 +20,36 @@ let replyTarget = null;
 const postsDiv = document.getElementById("posts");
 const notifDiv = document.getElementById("notifications");
 
-// Add Post
+// 🚀 ADD POST
 window.addPost = async () => {
-  const username = usernameInput.value;
-  const text = postInput.value;
+  const username = document.getElementById("username").value;
+  const text = document.getElementById("postInput").value;
 
-  if (!username || !text) return alert("Enter all");
+  if (!username || !text) {
+    alert("Enter username and post!");
+    return;
+  }
 
   localStorage.setItem("username", username);
 
   await addDoc(collection(db, "posts"), {
-    username, text, time: serverTimestamp(), likes: 0
+    username,
+    text,
+    time: serverTimestamp(),
+    likes: 0
   });
 
-  postInput.value = "";
+  document.getElementById("postInput").value = "";
 };
 
-// Like
+// ❤️ LIKE
 window.likePost = async (id) => {
   await updateDoc(doc(db, "posts", id), {
     likes: increment(1)
   });
 };
 
-// Comment
+// 💬 COMMENT
 window.addComment = async (postId) => {
   const input = document.getElementById(`comment-${postId}`);
   const text = input.value;
@@ -51,37 +57,47 @@ window.addComment = async (postId) => {
   if (!text) return;
 
   await addDoc(collection(db, "posts", postId, "comments"), {
-    text, time: serverTimestamp(), parentId: replyTarget
+    text,
+    time: serverTimestamp(),
+    parentId: replyTarget
   });
 
   replyTarget = null;
   input.value = "";
 };
 
-// Delete Comment
+// 🗑 DELETE COMMENT
 window.deleteComment = async (postId, id) => {
   await deleteDoc(doc(db, "posts", postId, "comments", id));
 };
 
-// Reply
+// ↩ REPLY
 window.replyTo = (postId, id) => {
   replyTarget = id;
   document.getElementById(`comment-${postId}`).focus();
 };
 
-// Load Posts
+// 📡 LOAD POSTS
 const q = query(collection(db, "posts"), orderBy("time", "desc"));
 
-onSnapshot(q, snap => {
+onSnapshot(q, (snapshot) => {
   allPosts = [];
-  snap.forEach(d => allPosts.push({ id: d.id, ...d.data() }));
+
+  snapshot.forEach((docItem) => {
+    allPosts.push({
+      id: docItem.id,
+      ...docItem.data()
+    });
+  });
+
   renderPosts(allPosts);
 });
 
+// 🎯 RENDER POSTS
 function renderPosts(posts) {
   postsDiv.innerHTML = "";
 
-  posts.forEach(p => {
+  posts.forEach((p) => {
     postsDiv.innerHTML += `
       <div class="border-b border-gray-700 p-4">
 
@@ -95,47 +111,47 @@ function renderPosts(posts) {
         <input id="comment-${p.id}" placeholder="Comment..."
           class="w-full mt-2 p-2 bg-gray-900 border border-gray-700 rounded">
 
-        <button onclick="addComment('${p.id}')" class="text-blue-400">Reply</button>
+        <button onclick="addComment('${p.id}')" class="text-blue-400">
+          Reply
+        </button>
 
         <div id="comments-${p.id}"></div>
+
       </div>
     `;
   });
 }
 
-// Navigation
+// 🔍 SEARCH
+document.getElementById("searchInput").addEventListener("input", (e) => {
+  const value = e.target.value.toLowerCase();
+
+  const filtered = allPosts.filter((p) =>
+    p.username.toLowerCase().includes(value) ||
+    p.text.toLowerCase().includes(value)
+  );
+
+  renderPosts(filtered);
+});
+
+// 🧭 NAVIGATION
 function hideAll() {
   homeSection.classList.add("hidden");
   notificationSection.classList.add("hidden");
   exploreSection.classList.add("hidden");
   aboutSection.classList.add("hidden");
-  donateSection.classList.add("hidden");
 }
 
 window.showHome = () => { hideAll(); homeSection.classList.remove("hidden"); };
 window.showNotifications = () => { hideAll(); notificationSection.classList.remove("hidden"); };
 window.showExplore = () => { hideAll(); exploreSection.classList.remove("hidden"); };
 window.showAbout = () => { hideAll(); aboutSection.classList.remove("hidden"); };
-window.showDonate = () => { hideAll(); donateSection.classList.remove("hidden"); };
 
-// Razorpay
-window.payNow = function () {
-  var options = {
-    key: "rzp_test_XXXXXXXX",
-    amount: "5000",
-    currency: "INR",
-    name: "JustTypeWeb",
-    description: "Donation",
-    handler: function () {
-      alert("Payment Successful 🎉");
-    }
-  };
-
-  new Razorpay(options).open();
-};
-
-// Load username
+// 👤 LOAD USER
 window.onload = () => {
   const saved = localStorage.getItem("username");
-  if (saved) username.value = saved;
+
+  if (saved) {
+    document.getElementById("username").value = saved;
+  }
 };
